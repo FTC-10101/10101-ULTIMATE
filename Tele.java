@@ -8,6 +8,7 @@ public class Tele extends OpMode {
 
     // Inherits hardware class
     private ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
+    int test = 69;
 
     // This is the same sleep method that is used in autonomous programs. It will eventually be used
     // for delays in the main loop to prevent the program from thinking a button was pressed
