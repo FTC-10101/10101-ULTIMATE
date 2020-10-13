@@ -7,6 +7,7 @@ public class ULTIMATEHardware {
 
     // Hardware Map
     HardwareMap skyhw = null;
+    int nice = 69;
 
     // DC motors
     public DcMotor leftF, leftB, rightF, rightB, // drive motors
