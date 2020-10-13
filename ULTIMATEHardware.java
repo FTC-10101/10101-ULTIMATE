@@ -7,11 +7,9 @@ public class ULTIMATEHardware {
 
     // Hardware Map
     HardwareMap skyhw = null;
-<<<<<<< Updated upstream
     int nice = 69;
-=======
     int dummy = 1;
->>>>>>> Stashed changes
+
 
     // DC motors
     public DcMotor leftF, leftB, rightF, rightB, // drive motors
