@@ -6,14 +6,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class ULTIMATEHardware {
 
     // Hardware Map
-    HardwareMap skyhw = null;
-    int nice = 69;
-    int dummy = 1;
-
+    HardwareMap ultimatehw = null;
 
     // DC motors
     public DcMotor leftF, leftB, rightF, rightB, // drive motors
             shoot1, shoot2; // shooter motors
+
+    // Servos
+    public Servo feedServo;
 
     public ULTIMATEHardware() { } // default constructor
 
@@ -24,5 +24,6 @@ public class ULTIMATEHardware {
         leftF = ulthw.dcMotor.get("leftF");
         shoot1 = ulthw.dcMotor.get("shoot1");
         shoot2 = ulthw.dcMotor.get("shoot2");
+        feedServo = ulthw.servo.get("feedServo");
     }
 }
