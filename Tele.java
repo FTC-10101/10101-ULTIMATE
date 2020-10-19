@@ -9,6 +9,9 @@ public class Tele extends OpMode {
     // Inherits hardware class
     private ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
 
+    boolean aWasPressed = false;
+    boolean bWasPressed = false;
+
     // This is the same sleep method that is used in autonomous programs. It will eventually be used
     // for delays in the main loop to prevent the program from thinking a button was pressed
     // multiple times
@@ -75,27 +78,30 @@ public class Tele extends OpMode {
         }
 
         // Accessory driver's controls
-
-        // The power values below may not be correct because I don't know how the motors are mounted
-        // Else statements may be unnecessary, but I have had problems in the past where motors
-        // would continue to turn after pressing their respective buttons on the gamepad unless
-        // I added an else statement putting them at 0. This can be tested once the shooter is ready
-        if(gamepad2.a){
+        if(gamepad2.a) {
             ULTIMATE.shoot1.setPower(1);
-            ULTIMATE.shoot1.setPower(1);
+            ULTIMATE.shoot2.setPower(1);
+            aWasPressed = true;
+            sleep(250);
         }
         else {
             ULTIMATE.shoot1.setPower(0);
-            ULTIMATE.shoot1.setPower(0);
+            ULTIMATE.shoot2.setPower(0);
+            aWasPressed = false;
+            sleep(250);
         }
-        if(gamepad2.b){
-            ULTIMATE.shoot1.setPower(-1);
-            ULTIMATE.shoot1.setPower(-1);
+        if(gamepad2.a) {
+            ULTIMATE.intake.setPower(1);
+            bWasPressed = true;
+            sleep(250);
         }
         else {
-            ULTIMATE.shoot1.setPower(0);
-            ULTIMATE.shoot1.setPower(0);
+            ULTIMATE.intake.setPower(0);
+            bWasPressed = false;
+            sleep(250);
         }
+        telemetry.addData("a: ", aWasPressed);
+        telemetry.addData("b: ", bWasPressed);
     }
     // Makes sure the program stops completely
     public void stop () {
