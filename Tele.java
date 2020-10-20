@@ -79,8 +79,8 @@ public class Tele extends OpMode {
 
         // Accessory driver's controls
         if(gamepad2.a) {
-            ULTIMATE.shoot1.setPower(1);
-            ULTIMATE.shoot2.setPower(1);
+            ULTIMATE.shoot1.setPower(-1);
+            ULTIMATE.shoot2.setPower(-1);
             aWasPressed = true;
             sleep(250);
         }
@@ -90,7 +90,7 @@ public class Tele extends OpMode {
             aWasPressed = false;
             sleep(250);
         }
-        if(gamepad2.a) {
+        if(gamepad2.b) {
             ULTIMATE.intake.setPower(1);
             bWasPressed = true;
             sleep(250);

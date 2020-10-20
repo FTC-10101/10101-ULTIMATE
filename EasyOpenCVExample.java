@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-
+/*
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -80,9 +80,6 @@ public class EasyOpenCVExample extends LinearOpMode
 
     public static class SkystoneDeterminationPipeline extends OpenCvPipeline
     {
-        /*
-         * An enum to define the skystone position
-         */
         public enum RingPosition
         {
             FOUR,
@@ -90,16 +87,11 @@ public class EasyOpenCVExample extends LinearOpMode
             NONE
         }
 
-        /*
-         * Some color constants
-         */
+
         static final Scalar BLUE = new Scalar(0, 0, 255);
         static final Scalar GREEN = new Scalar(0, 255, 0);
 
-        /*
-         * The core values which define the location and size of the sample regions
-         */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,98);
+      static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,98);
 
         static final int REGION_WIDTH = 35;
         static final int REGION_HEIGHT = 25;
@@ -114,9 +106,6 @@ public class EasyOpenCVExample extends LinearOpMode
                 REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
                 REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
-        /*
-         * Working variables
-         */
         Mat region1_Cb;
         Mat YCrCb = new Mat();
         Mat Cb = new Mat();
@@ -125,10 +114,7 @@ public class EasyOpenCVExample extends LinearOpMode
         // Volatile since accessed by OpMode thread w/o synchronization
         private volatile RingPosition position = RingPosition.FOUR;
 
-        /*
-         * This function takes the RGB frame, converts to YCrCb,
-         * and extracts the Cb channel to the 'Cb' variable
-         */
+
         void inputToCb(Mat input)
         {
             Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
@@ -181,4 +167,4 @@ public class EasyOpenCVExample extends LinearOpMode
             return avg1;
         }
     }
-}
+}*/
