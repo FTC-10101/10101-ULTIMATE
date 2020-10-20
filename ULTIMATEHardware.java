@@ -14,7 +14,7 @@ public class ULTIMATEHardware {
             shoot1, shoot2, intake; // intake and shooter motors
 
     // Servos
-    public Servo feedServo;
+    public Servo intakeServo, feedServo;
 
     public ULTIMATEHardware() { } // default constructor
 
@@ -28,7 +28,7 @@ public class ULTIMATEHardware {
         shoot1 = ulthw.dcMotor.get("shoot1");
         shoot2 = ulthw.dcMotor.get("shoot2");
         intake = ulthw.dcMotor.get("intake");
-        //feedServo = ulthw.servo.get("feedServo");
-
+        feedServo = ulthw.servo.get("feedServo");
+        intakeServo = ulthw.servo.get("intakeServo");
     }
 }
