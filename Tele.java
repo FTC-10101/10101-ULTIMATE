@@ -1,5 +1,6 @@
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Hardware;
 
 @TeleOp
@@ -56,6 +57,7 @@ public class Tele extends OpMode {
         if(gamepad1.dpad_up) {
             ULTIMATE.leftF.setPower(.8);
             ULTIMATE.leftB.setPower(.8);
+            ULTIMATE.rightF.setPower(.8);
             ULTIMATE.rightB.setPower(.8);
         }
         if(gamepad1.dpad_down) {
@@ -76,29 +78,41 @@ public class Tele extends OpMode {
             ULTIMATE.rightF.setPower(-.8);
             ULTIMATE.rightB.setPower(.8);
         }
-
+        ULTIMATE.intake.setPower(gamepad2.right_stick_y);
+        if(gamepad2.x){
+            ULTIMATE.feedServo.setPosition(.8);
+        }
+        if (gamepad2.y){
+            ULTIMATE.feedServo.setPosition(0);
+        }
+        if(gamepad2.dpad_up){
+            ULTIMATE.intakeServo.setPosition(1);
+        }
+        if(gamepad2.dpad_down){
+            ULTIMATE.intakeServo.setPosition(.85);
+        }
         // Accessory driver's controls
         if(gamepad2.a) {
             ULTIMATE.shoot1.setPower(-1);
             ULTIMATE.shoot2.setPower(-1);
             aWasPressed = true;
-            sleep(250);
+            //sleep(250);
         }
         else {
             ULTIMATE.shoot1.setPower(0);
             ULTIMATE.shoot2.setPower(0);
             aWasPressed = false;
-            sleep(250);
+            //sleep(250);
         }
         if(gamepad2.b) {
-            ULTIMATE.intake.setPower(1);
+            ULTIMATE.intake.setPower(-1);
             bWasPressed = true;
-            sleep(250);
+            //sleep(250);
         }
         else {
             ULTIMATE.intake.setPower(0);
             bWasPressed = false;
-            sleep(250);
+            //sleep(250);
         }
         telemetry.addData("a: ", aWasPressed);
         telemetry.addData("b: ", bWasPressed);
