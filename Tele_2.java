@@ -3,16 +3,18 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Hardware;
 
+// *****This program needs a lot of testing****
 @TeleOp
 //@Disabled
-public class Tele extends OpMode {
+public class Tele_2 extends OpMode {
 
     // Inherits hardware class
     private ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
 
-    boolean aWasPressed = false;
-    boolean bWasPressed = false;
-
+    boolean aToggle = false;
+    boolean bToggle = false;
+    boolean lBumperWasPressed = false;
+    boolean rBumperWasPressed = false;
     // This is the same sleep method that is used in autonomous programs. It will eventually be used
     // for delays in the main loop to prevent the program from thinking a button was pressed
     // multiple times
@@ -25,9 +27,10 @@ public class Tele extends OpMode {
     }
 
     public void init() {
-        // Initializes hardware map for the phones
+        // Initializes hardware map for the control hub
         ULTIMATE.init(hardwareMap);
     }
+
     public void loop() {
 
         // Primary driver's controls
@@ -54,69 +57,91 @@ public class Tele extends OpMode {
 
         // Below is an option for the primary driver to use the dpad to move for slower, more
         // precise movements
-        if(gamepad1.dpad_up) {
+        if (gamepad1.dpad_up) {
             ULTIMATE.leftF.setPower(.8);
             ULTIMATE.leftB.setPower(.8);
             ULTIMATE.rightF.setPower(.8);
             ULTIMATE.rightB.setPower(.8);
         }
-        if(gamepad1.dpad_down) {
+        if (gamepad1.dpad_down) {
             ULTIMATE.leftF.setPower(-.8);
             ULTIMATE.leftB.setPower(-.8);
             ULTIMATE.rightF.setPower(-.8);
             ULTIMATE.rightB.setPower(-.8);
         }
-        if(gamepad1.dpad_right) {
+        if (gamepad1.dpad_right) {
             ULTIMATE.leftF.setPower(-.8);
             ULTIMATE.leftB.setPower(.8);
             ULTIMATE.rightF.setPower(.8);
             ULTIMATE.rightB.setPower(-.8);
         }
-        if(gamepad1.dpad_left) {
+        if (gamepad1.dpad_left) {
             ULTIMATE.leftF.setPower(.8);
             ULTIMATE.leftB.setPower(-.8);
             ULTIMATE.rightF.setPower(-.8);
             ULTIMATE.rightB.setPower(.8);
         }
-        ULTIMATE.intake.setPower(-gamepad2.right_stick_y);
-        if(gamepad2.x){
-            ULTIMATE.feedServo.setPosition(.8);
-        }
-        if (gamepad2.y){
-            ULTIMATE.feedServo.setPosition(0);
-        }
-        if(gamepad2.dpad_up){
-            ULTIMATE.intakeServo.setPosition(1);
-        }
-        if(gamepad2.dpad_down){
-            ULTIMATE.intakeServo.setPosition(.85);
-        }
+
         // Accessory driver's controls
-        if(gamepad2.a) {
+        if (gamepad2.a) {
+            aToggle = !aToggle;
+            sleep(250);
+        }
+
+        if (!aToggle && gamepad2.right_trigger == 0) {
             ULTIMATE.shoot1.setPower(1);
             ULTIMATE.shoot2.setPower(1);
-            aWasPressed = true;
-            //sleep(250);
-        }
-        else {
+        } else {
             ULTIMATE.shoot1.setPower(0);
             ULTIMATE.shoot2.setPower(0);
-            aWasPressed = false;
-            //sleep(250);
         }
-        if(gamepad2.b) {
+
+        if (gamepad2.b) {
+            bToggle = !bToggle;
+            sleep(250);
+        }
+
+        if (!bToggle && gamepad2.left_trigger == 0) {
             ULTIMATE.intake.setPower(1);
-            bWasPressed = true;
-            //sleep(250);
-        }
-        else {
+
+        } else {
             ULTIMATE.intake.setPower(0);
-            bWasPressed = false;
-            //sleep(250);
         }
-        telemetry.addData("a: ", aWasPressed);
-        telemetry.addData("b: ", bWasPressed);
+
+        ULTIMATE.shoot1.setPower(-gamepad2.right_trigger);
+        ULTIMATE.shoot2.setPower(-gamepad2.right_trigger);
+        ULTIMATE.intake.setPower(-gamepad2.left_trigger);
+
+        if (gamepad2.right_bumper) {
+            if(!rBumperWasPressed){
+                ULTIMATE.feedServo.setPosition(.8);
+                rBumperWasPressed = true;
+                sleep(250);
+            }
+            else{
+                ULTIMATE.feedServo.setPosition(0);
+                rBumperWasPressed = false;
+                sleep(250);
+            }
+        }
+
+        if (gamepad2.left_bumper) {
+            if(!lBumperWasPressed){
+                ULTIMATE.intakeServo.setPosition(1);
+                lBumperWasPressed = true;
+                sleep(250);
+            }
+            else{
+                ULTIMATE.intakeServo.setPosition(.85);
+                lBumperWasPressed = false;
+                sleep(250);
+            }
+        }
+
+        telemetry.addData("aToggle: ", aToggle);
+        telemetry.addData("bToggle: ", bToggle);
     }
+
     // Makes sure the program stops completely
     public void stop () {
     }

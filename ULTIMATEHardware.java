@@ -23,12 +23,13 @@ public class ULTIMATEHardware {
         rightB = ulthw.dcMotor.get("rightB");
         rightF = ulthw.dcMotor.get("rightF");
         leftF = ulthw.dcMotor.get("leftF");
-        //leftF.setDirection(DcMotorSimple.Direction.REVERSE);
-        //leftB.setDirection(DcMotorSimple.Direction.REVERSE);
         shoot1 = ulthw.dcMotor.get("shoot1");
         shoot2 = ulthw.dcMotor.get("shoot2");
         intake = ulthw.dcMotor.get("intake");
         feedServo = ulthw.servo.get("feedServo");
         intakeServo = ulthw.servo.get("intakeServo");
+        shoot1.setDirection(DcMotor.Direction.REVERSE);
+        shoot2.setDirection(DcMotor.Direction.REVERSE);
+        intake.setDirection(DcMotor.Direction.REVERSE);
     }
 }
