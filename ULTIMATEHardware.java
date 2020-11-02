@@ -31,6 +31,7 @@ public class ULTIMATEHardware {
         intake = ulthw.dcMotor.get("intake");
         feedServo = ulthw.servo.get("feedServo");
         intakeServo = ulthw.servo.get("intakeServo");
+
         // This is the best way to account for motors being mounted in the opposite direction.
         // Instead of having to use a negative sign for the motor power value all the time, I can
         // just write these lines are forget about it. It also makes our programs more readable

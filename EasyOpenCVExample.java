@@ -38,7 +38,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 @TeleOp
 public class EasyOpenCVExample extends LinearOpMode
 {
-    WebcamName Webcam1;
+    OpenCvCamera Webcam1;
     SkystoneDeterminationPipeline pipeline;
 
     @Override
@@ -46,21 +46,20 @@ public class EasyOpenCVExample extends LinearOpMode
     {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        final OpenCvCamera cam = OpenCvCameraFactory.getInstance().createWebcam(Webcam1, cameraMonitorViewId);
+        Webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         pipeline = new SkystoneDeterminationPipeline();
-        cam.setPipeline(pipeline);
+        Webcam1.setPipeline(pipeline);
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
         // out when the RC activity is in portrait. We do our actual image processing assuming
         // landscape orientation, though.
-        cam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
-        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        Webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                cam.startStreaming(320,240);
+                Webcam1.startStreaming(320,240);
             }
         });
 

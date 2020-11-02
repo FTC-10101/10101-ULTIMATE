@@ -11,10 +11,13 @@ public class Tele_2 extends OpMode {
     // Inherits hardware class
     private ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
 
-    boolean aToggle = false;
+
     boolean bToggle = false;
-    boolean lBumperWasPressed = false;
+    boolean aWasPressed = false;
     boolean rBumperWasPressed = false;
+    boolean gPad2_AToggle = false;
+    boolean gPad2_BToggle = false;
+    boolean gPad2_rBumperWasPressed = false;
     int sleepConstant = 200;
 
     // This is the same sleep method that is used in autonomous programs. It is used
@@ -84,6 +87,32 @@ public class Tele_2 extends OpMode {
             ULTIMATE.rightB.setPower(.8);
         }
 
+        if (gamepad1.b) {
+            bToggle = !bToggle;
+            sleep(sleepConstant);
+        }
+
+        if (bToggle && gamepad1.left_trigger == 0) {
+            ULTIMATE.intake.setPower(1);
+        }
+        else {
+            ULTIMATE.intake.setPower(0);
+        }
+
+        if (gamepad1.a) {
+            if(!aWasPressed){
+                ULTIMATE.feedServo.setPosition(.8);
+                aWasPressed = true;
+                sleep(sleepConstant);
+            }
+            else{
+                ULTIMATE.feedServo.setPosition(0);
+                aWasPressed = false;
+                sleep(sleepConstant);
+            }
+        }
+
+
         // Accessory driver's controls
 
         // I have never worked with buttons this way before, so it needs to be tested and may need
@@ -100,11 +129,11 @@ public class Tele_2 extends OpMode {
         // because we might use that later.
 
         if (gamepad2.a) {
-            aToggle = !aToggle;
+            gPad2_AToggle= !gPad2_AToggle;
             sleep(sleepConstant);
         }
 
-        if (aToggle && gamepad2.right_trigger == 0) {
+        if (gPad2_AToggle && gamepad2.right_trigger == 0) {
             ULTIMATE.shoot1.setPower(1);
             ULTIMATE.shoot2.setPower(1);
         } else {
@@ -113,15 +142,16 @@ public class Tele_2 extends OpMode {
         }
 
         if (gamepad2.b) {
-            bToggle = !bToggle;
+            gPad2_BToggle = !gPad2_BToggle;
             sleep(sleepConstant);
         }
 
-        if (bToggle && gamepad2.left_trigger == 0) {
-            ULTIMATE.intake.setPower(1);
-
+        if (gPad2_BToggle && gamepad2.right_trigger == 0) {
+            ULTIMATE.shoot1.setPower(.8);
+            ULTIMATE.shoot2.setPower(.8);
         } else {
-            ULTIMATE.intake.setPower(0);
+            ULTIMATE.shoot1.setPower(0);
+            ULTIMATE.shoot2.setPower(0);
         }
 
         // These lines are supposed to give the acc. driver the ability to reverse the intake and
@@ -136,37 +166,24 @@ public class Tele_2 extends OpMode {
         // This is basically the same way I put the front plate grabber servos on the same button
         // last year, so this should work
 
-        if (gamepad2.right_bumper) {
-            if(!rBumperWasPressed){
-                ULTIMATE.feedServo.setPosition(.8);
-                rBumperWasPressed = true;
-                sleep(sleepConstant);
-            }
-            else{
-                ULTIMATE.feedServo.setPosition(0);
-                rBumperWasPressed = false;
-                sleep(sleepConstant);
-            }
-        }
 
-        if (gamepad2.left_bumper) {
-            if(!lBumperWasPressed){
+        if (gamepad2.right_bumper) {
+            if(!gPad2_rBumperWasPressed) {
                 ULTIMATE.intakeServo.setPosition(1);
-                lBumperWasPressed = true;
+                gPad2_rBumperWasPressed = true;
                 sleep(sleepConstant);
             }
+
             else{
                 ULTIMATE.intakeServo.setPosition(.85);
-                lBumperWasPressed = false;
+                gPad2_rBumperWasPressed = false;
                 sleep(sleepConstant);
             }
-        }
 
-        // For testing to see if the buttons are working as intended
-        telemetry.addData("aToggle: ", aToggle);
-        telemetry.addData("bToggle: ", bToggle);
+
     }
 
+}
     // Makes sure the program stops completely
     public void stop () {
     }
