@@ -38,5 +38,11 @@ public class ULTIMATEHardware {
         shoot1.setDirection(DcMotor.Direction.REVERSE);
         shoot2.setDirection(DcMotor.Direction.REVERSE);
         intake.setDirection(DcMotor.Direction.REVERSE);
+        //leftF.setDirection(DcMotor.Direction.REVERSE);
+        //rightF.setDirection(DcMotor.Direction.REVERSE);
+        //rightB.setDirection(DcMotor.Direction.REVERSE);
+        //leftB.setDirection(DcMotor.Direction.REVERSE);
+
+
     }
 }
