@@ -18,7 +18,7 @@ public class Park extends LinearOpMode {
 
         waitForStart();
 
-        moveForward(1,1000);
+        moveForward(.3,1000);
     }
     private void moveForward (double power, int time){
         ULTIMATE.leftF.setPower(power);

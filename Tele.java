@@ -1,4 +1,4 @@
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+/*import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
@@ -121,4 +121,4 @@ public class Tele extends OpMode {
     // Makes sure the program stops completely
     public void stop () {
     }
-}
+}*/

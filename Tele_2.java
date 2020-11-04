@@ -1,9 +1,10 @@
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Hardware;
 
-// *****This program needs a lot of testing****
+
 @TeleOp
 //@Disabled
 public class Tele_2 extends OpMode {
@@ -13,11 +14,15 @@ public class Tele_2 extends OpMode {
 
 
     boolean bToggle = false;
+    boolean xWasPressed = false;
     boolean aWasPressed = false;
     boolean gPad2_AToggle = false;
-    boolean gPad2_BToggle = false;
+    boolean gPad2_BWasPressed = false;
     boolean gPad2_rBumperWasPressed = false;
+    boolean gPad2_xWasPressed = false;
+    boolean gPad2_yWasPressed = false;
     int sleepConstant = 200;
+
 
     // This is the same sleep method that is used in autonomous programs. It is used
     // for delays in the main loop to prevent the program from thinking a button was pressed
@@ -43,13 +48,13 @@ public class Tele_2 extends OpMode {
         double drive;   // Power for forward and back motion
         double strafe;  // Power for left and right motion
         double rotate;  // Power for rotating the robot
-        drive = gamepad1.left_stick_y;
+        drive = -gamepad1.left_stick_y;
         strafe = gamepad1.left_stick_x;
-        rotate = gamepad1.right_stick_x;
-        double frontLeftPower = (drive) + strafe + (rotate);
+        rotate = -gamepad1.right_stick_x;
+        double frontLeftPower = (drive) + strafe - (rotate);
         double backLeftPower = (drive) - strafe - (rotate);
         double frontRightPower = (drive) - strafe + (rotate);
-        double backRightPower = (drive) + strafe - (rotate);
+        double backRightPower = (drive) + strafe + (rotate);
         ULTIMATE.leftF.setPower(frontLeftPower);
         ULTIMATE.leftB.setPower(backLeftPower);
         ULTIMATE.rightF.setPower(frontRightPower);
@@ -58,6 +63,9 @@ public class Tele_2 extends OpMode {
         telemetry.addData("Left Rear Power", (float) backLeftPower);
         telemetry.addData("Right Front Power", (float) frontRightPower);
         telemetry.addData("Right Rear Power", (float) backRightPower);
+        telemetry.addData("a state: ", ULTIMATE.trigger.getPosition());
+        telemetry.addData("l button: ", ULTIMATE.armSwing.getPosition());
+        telemetry.addData("latch: ", ULTIMATE.latch.getPosition());
 
         // Below is an option for the primary driver to use the dpad to move for slower, more
         // precise movements
@@ -86,38 +94,33 @@ public class Tele_2 extends OpMode {
             ULTIMATE.rightB.setPower(.8);
         }
 
+        // move the intake dc motor
         if (gamepad1.b) {
             bToggle = !bToggle;
             sleep(sleepConstant);
         }
 
-        if (bToggle && gamepad1.left_trigger == 0) {
+        if (bToggle) {
             ULTIMATE.intake.setPower(1);
-        }
-        else {
+        } else {
             ULTIMATE.intake.setPower(0);
         }
 
+
+        // move the "trigger"
         if (gamepad1.a) {
-            if(!aWasPressed){
-                ULTIMATE.feedServo.setPosition(.8);
-                aWasPressed = true;
-                sleep(sleepConstant);
-            }
-            else{
-                ULTIMATE.feedServo.setPosition(0);
-                aWasPressed = false;
-                sleep(sleepConstant);
-            }
+            ULTIMATE.trigger.setPosition(.8);
+        } else {
+            ULTIMATE.trigger.setPosition(0);
         }
+
 
 
         // Accessory driver's controls
 
-       
-
+        // move the shoot wheel motors
         if (gamepad2.a) {
-            gPad2_AToggle= !gPad2_AToggle;
+            gPad2_AToggle = !gPad2_AToggle;
             sleep(sleepConstant);
         }
 
@@ -129,48 +132,48 @@ public class Tele_2 extends OpMode {
             ULTIMATE.shoot2.setPower(0);
         }
 
+        // move the "catchplate"
         if (gamepad2.b) {
-            gPad2_BToggle = !gPad2_BToggle;
-            sleep(sleepConstant);
-        }
-
-        if (gPad2_BToggle) {
-            ULTIMATE.shoot1.setPower(.4);
-            ULTIMATE.shoot2.setPower(.4);
-        } else {
-            ULTIMATE.shoot1.setPower(0);
-            ULTIMATE.shoot2.setPower(0);
-        }
-        telemetry.addData("shoot power: ", ULTIMATE.shoot1.getPower());
-
-        //ULTIMATE.shoot1.setPower(-gamepad2.right_trigger);
-        //ULTIMATE.shoot2.setPower(-gamepad2.right_trigger);
-        //ULTIMATE.intake.setPower(-gamepad2.left_trigger);
-
-
-
-
-        /*if (gamepad2.right_bumper) {
-            if(!gPad2_rBumperWasPressed) {
-                ULTIMATE.intakeServo.setPosition(1);
-                gPad2_rBumperWasPressed = true;
+            if (!gPad2_BWasPressed) {
+                ULTIMATE.catchPlate.setPosition(1);
+                gPad2_BWasPressed = true;
+                sleep(sleepConstant);
+            } else {
+                ULTIMATE.catchPlate.setPosition(.85);
+                gPad2_BWasPressed = false;
                 sleep(sleepConstant);
             }
+        }
 
-            else{
-                ULTIMATE.intakeServo.setPosition(.85);
-                gPad2_rBumperWasPressed = false;
+        // move the "catchplate"
+        if (gamepad2.x) {
+            if (!gPad2_xWasPressed) {
+                ULTIMATE.armSwing.setPosition(1);
+                gPad2_xWasPressed = true;
+                sleep(sleepConstant);
+            } else {
+                ULTIMATE.armSwing.setPosition(0);
+                gPad2_xWasPressed = false;
                 sleep(sleepConstant);
             }
-    }*/
-        if(gamepad2.right_bumper){
-            ULTIMATE.intakeServo.setPosition(1);
         }
-        else{
-            ULTIMATE.intakeServo.setPosition(.85);
+        // move wobble goal latch
+        if (gamepad2.y) {
+            if (!gPad2_yWasPressed) {
+                ULTIMATE.latch.setPosition(1);
+                gPad2_yWasPressed = true;
+                sleep(sleepConstant);
+            } else {
+                ULTIMATE.latch.setPosition(0);
+                gPad2_yWasPressed = false;
+                sleep(sleepConstant);
+            }
         }
 
-}
+        // move the wobble goal arm
+        ULTIMATE.extensionArm.setPower(gamepad2.left_stick_x);
+    }
+
     // Makes sure the program stops completely
     public void stop () {
     }

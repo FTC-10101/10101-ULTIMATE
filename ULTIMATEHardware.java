@@ -13,10 +13,11 @@ public class ULTIMATEHardware {
 
     // DC motors
     public DcMotor leftF, leftB, rightF, rightB, // drive motors
-            shoot1, shoot2, intake; // intake and shooter motors
+            shoot1, shoot2, intake, // intake and shooter motors
+            extensionArm; // arm for wobble goal
 
     // Servos
-    public Servo intakeServo, feedServo;
+    public Servo catchPlate, trigger, deflector, armSwing, latch;
 
     public ULTIMATEHardware() { } // default constructor. Another line that seems unnecessary to me
     // but we have have used it in years past
@@ -29,8 +30,13 @@ public class ULTIMATEHardware {
         shoot1 = ulthw.dcMotor.get("shoot1");
         shoot2 = ulthw.dcMotor.get("shoot2");
         intake = ulthw.dcMotor.get("intake");
-        feedServo = ulthw.servo.get("feedServo");
-        intakeServo = ulthw.servo.get("intakeServo");
+        extensionArm = ulthw.dcMotor.get("extensionArm");
+        trigger = ulthw.servo.get("trigger");
+        catchPlate = ulthw.servo.get("catchPlate");
+        deflector = ulthw.servo.get("deflector");
+        armSwing = ulthw.servo.get("armSwing");
+        latch = ulthw.servo.get("latch");
+
 
         // This is the best way to account for motors being mounted in the opposite direction.
         // Instead of having to use a negative sign for the motor power value all the time, I can
@@ -38,10 +44,11 @@ public class ULTIMATEHardware {
         shoot1.setDirection(DcMotor.Direction.REVERSE);
         shoot2.setDirection(DcMotor.Direction.REVERSE);
         intake.setDirection(DcMotor.Direction.REVERSE);
-        //leftF.setDirection(DcMotor.Direction.REVERSE);
-        //rightF.setDirection(DcMotor.Direction.REVERSE);
-        //rightB.setDirection(DcMotor.Direction.REVERSE);
-        //leftB.setDirection(DcMotor.Direction.REVERSE);
+        leftF.setDirection(DcMotor.Direction.REVERSE);
+        rightF.setDirection(DcMotor.Direction.REVERSE);
+        rightB.setDirection(DcMotor.Direction.REVERSE);
+        leftB.setDirection(DcMotor.Direction.REVERSE);
+        extensionArm.setDirection(DcMotor.Direction.REVERSE);
 
 
     }

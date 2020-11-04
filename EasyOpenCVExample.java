@@ -33,6 +33,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @TeleOp
@@ -59,7 +60,7 @@ public class EasyOpenCVExample extends LinearOpMode
             @Override
             public void onOpened()
             {
-                Webcam1.startStreaming(320,240);
+                Webcam1.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
             }
         });
 
