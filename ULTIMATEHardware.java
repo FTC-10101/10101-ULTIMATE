@@ -48,8 +48,6 @@ public class ULTIMATEHardware {
         rightF.setDirection(DcMotor.Direction.REVERSE);
         rightB.setDirection(DcMotor.Direction.REVERSE);
         leftB.setDirection(DcMotor.Direction.REVERSE);
-        extensionArm.setDirection(DcMotor.Direction.REVERSE);
-
 
     }
 }

@@ -15,10 +15,9 @@ public class Tele_2 extends OpMode {
 
     boolean bToggle = false;
     boolean xWasPressed = false;
-    boolean aWasPressed = false;
+    boolean yToggle = false;
     boolean gPad2_AToggle = false;
     boolean gPad2_BWasPressed = false;
-    boolean gPad2_rBumperWasPressed = false;
     boolean gPad2_xWasPressed = false;
     boolean gPad2_yWasPressed = false;
     int sleepConstant = 200;
@@ -63,9 +62,7 @@ public class Tele_2 extends OpMode {
         telemetry.addData("Left Rear Power", (float) backLeftPower);
         telemetry.addData("Right Front Power", (float) frontRightPower);
         telemetry.addData("Right Rear Power", (float) backRightPower);
-        telemetry.addData("a state: ", ULTIMATE.trigger.getPosition());
-        telemetry.addData("l button: ", ULTIMATE.armSwing.getPosition());
-        telemetry.addData("latch: ", ULTIMATE.latch.getPosition());
+        telemetry.addData("intake power: ", ULTIMATE.intake.getPower());
 
         // Below is an option for the primary driver to use the dpad to move for slower, more
         // precise movements
@@ -82,19 +79,19 @@ public class Tele_2 extends OpMode {
             ULTIMATE.rightB.setPower(-.8);
         }
         if (gamepad1.dpad_right) {
-            ULTIMATE.leftF.setPower(-.8);
-            ULTIMATE.leftB.setPower(.8);
-            ULTIMATE.rightF.setPower(.8);
-            ULTIMATE.rightB.setPower(-.8);
-        }
-        if (gamepad1.dpad_left) {
             ULTIMATE.leftF.setPower(.8);
             ULTIMATE.leftB.setPower(-.8);
             ULTIMATE.rightF.setPower(-.8);
             ULTIMATE.rightB.setPower(.8);
         }
+        if (gamepad1.dpad_left) {
+            ULTIMATE.leftF.setPower(-.8);
+            ULTIMATE.leftB.setPower(.8);
+            ULTIMATE.rightF.setPower(.8);
+            ULTIMATE.rightB.setPower(-.8);
+        }
 
-        // move the intake dc motor
+        // move the intake dc motor forwards and backwards
         if (gamepad1.b) {
             bToggle = !bToggle;
             sleep(sleepConstant);
@@ -107,11 +104,25 @@ public class Tele_2 extends OpMode {
         }
 
 
+
         // move the "trigger"
         if (gamepad1.a) {
             ULTIMATE.trigger.setPosition(.8);
         } else {
             ULTIMATE.trigger.setPosition(0);
+        }
+
+        // move the "deflector"
+        if (gamepad1.x) {
+            if (!xWasPressed) {
+                ULTIMATE.deflector.setPosition(.55);
+               xWasPressed = true;
+                sleep(sleepConstant);
+            } else {
+                ULTIMATE.deflector.setPosition(1);
+                xWasPressed = false;
+                sleep(sleepConstant);
+            }
         }
 
 
@@ -145,18 +156,27 @@ public class Tele_2 extends OpMode {
             }
         }
 
-        // move the "catchplate"
+        // move the wobble goal lifter
         if (gamepad2.x) {
             if (!gPad2_xWasPressed) {
                 ULTIMATE.armSwing.setPosition(1);
                 gPad2_xWasPressed = true;
                 sleep(sleepConstant);
             } else {
-                ULTIMATE.armSwing.setPosition(0);
+                ULTIMATE.armSwing.setPosition(.35);
                 gPad2_xWasPressed = false;
                 sleep(sleepConstant);
             }
         }
+
+
+        if(gamepad2.right_bumper){
+            ULTIMATE.armSwing.setPosition(0);
+            sleep(sleepConstant);
+        }
+
+
+
         // move wobble goal latch
         if (gamepad2.y) {
             if (!gPad2_yWasPressed) {

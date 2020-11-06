@@ -46,6 +46,9 @@ public class EasyOpenCVExample extends LinearOpMode
     public void runOpMode()
     {
 
+
+
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         Webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         pipeline = new SkystoneDeterminationPipeline();
@@ -60,9 +63,10 @@ public class EasyOpenCVExample extends LinearOpMode
             @Override
             public void onOpened()
             {
-                Webcam1.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+                Webcam1.startStreaming(640,480, OpenCvCameraRotation.UPRIGHT);
             }
         });
+
 
         waitForStart();
 
@@ -90,7 +94,7 @@ public class EasyOpenCVExample extends LinearOpMode
         static final Scalar BLUE = new Scalar(0, 0, 255);
         static final Scalar GREEN = new Scalar(0, 255, 0);
 
-      static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,98);
+      static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(230,320);
 
         static final int REGION_WIDTH = 35;
         static final int REGION_HEIGHT = 25;
