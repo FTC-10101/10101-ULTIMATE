@@ -3,9 +3,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous
-public class hitPowerShots extends LinearOpMode {
+public class moveWobbleGoal extends LinearOpMode {
 
     ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
+    OpenCV vision = new OpenCV();
 
     public void runOpMode() throws InterruptedException{
 
@@ -19,33 +20,8 @@ public class hitPowerShots extends LinearOpMode {
         ULTIMATE.rightF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
-        ULTIMATE.shoot1.setPower(1);
-        ULTIMATE.shoot2.setPower(1);
 
-
-
-        moveForward(.2, 300);
-        sleep(200);
-        strafeRight(.3,1500);
-        sleep(200);
-        moveForward(.5,1000);
-        sleep(200);
-
-        ULTIMATE.catchPlate.setPosition(1);
-        sleep(1000);
-
-        ULTIMATE.trigger.setPosition(.8);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(0);
-        strafeRight(.2,300);
-        ULTIMATE.trigger.setPosition(.8);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(0);
-        strafeRight(.2,300);
-        ULTIMATE.trigger.setPosition(.8);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(0);
-        strafeRight(.2,300);
+        telemetry.addData("Analysis", vision.pipeline.getAnalysis());
 
 
 

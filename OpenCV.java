@@ -37,7 +37,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @TeleOp
-public class EasyOpenCVExample extends LinearOpMode
+public class OpenCV extends LinearOpMode
 {
     OpenCvCamera Webcam1;
     SkystoneDeterminationPipeline pipeline;
