@@ -34,6 +34,8 @@ public class Tele_2 extends OpMode {
     public void init() {
         // Initializes hardware map for the control hub
         ULTIMATE.init(hardwareMap);
+
+        ULTIMATE.armSwing.setPosition(.35);
     }
 
     public void loop() {

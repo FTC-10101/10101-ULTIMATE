@@ -36,52 +36,9 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@TeleOp
-public class OpenCV extends LinearOpMode
-{
-    OpenCvCamera Webcam1;
-    SkystoneDeterminationPipeline pipeline;
-
-    @Override
-    public void runOpMode()
-    {
 
 
-
-
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        Webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        pipeline = new SkystoneDeterminationPipeline();
-        Webcam1.setPipeline(pipeline);
-
-        // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
-        // out when the RC activity is in portrait. We do our actual image processing assuming
-        // landscape orientation, though.
-
-        Webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                Webcam1.startStreaming(640,480, OpenCvCameraRotation.UPRIGHT);
-            }
-        });
-
-
-        waitForStart();
-
-        while (opModeIsActive())
-        {
-            telemetry.addData("Analysis", pipeline.getAnalysis());
-            telemetry.addData("Position", pipeline.position);
-            telemetry.update();
-
-            // Don't burn CPU cycles busy-looping in this sample
-            sleep(50);
-        }
-    }
-
-    public static class SkystoneDeterminationPipeline extends OpenCvPipeline
+    public class SkystoneDeterminationPipeline extends OpenCvPipeline
     {
         public enum RingPosition
         {
@@ -115,7 +72,7 @@ public class OpenCV extends LinearOpMode
         int avg1;
 
         // Volatile since accessed by OpMode thread w/o synchronization
-        private volatile RingPosition position = RingPosition.FOUR;
+        protected volatile RingPosition position = RingPosition.FOUR;
 
 
         void inputToCb(Mat input)
@@ -170,4 +127,3 @@ public class OpenCV extends LinearOpMode
             return avg1;
         }
     }
-}
