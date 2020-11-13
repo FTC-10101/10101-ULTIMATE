@@ -12,8 +12,8 @@ public class Tele_2 extends OpMode {
     boolean xWasPressed = false;
     boolean gPad2_AToggle = false;
     boolean gPad2_BWasPressed = false;
-    boolean gPad2_xWasPressed = false;
     boolean gPad2_yWasPressed = false;
+    boolean gPad2_xWasPressed = false;
     int sleepConstant = 200;
 
 
@@ -124,8 +124,8 @@ public class Tele_2 extends OpMode {
         }
 
         if (gPad2_AToggle) {
-            ULTIMATE.shoot1.setPower(1);
-            ULTIMATE.shoot2.setPower(1);
+            ULTIMATE.shoot1.setPower(.75);
+            ULTIMATE.shoot2.setPower(.75);
         } else {
             ULTIMATE.shoot1.setPower(0);
             ULTIMATE.shoot2.setPower(0);
@@ -138,7 +138,7 @@ public class Tele_2 extends OpMode {
                 gPad2_BWasPressed = true;
                 sleep(sleepConstant);
             } else {
-                ULTIMATE.catchPlate.setPosition(.85);
+                ULTIMATE.catchPlate.setPosition(.84);
                 gPad2_BWasPressed = false;
                 sleep(sleepConstant);
             }
@@ -150,7 +150,7 @@ public class Tele_2 extends OpMode {
         }
 
         // move the wobble goal lifter
-        /*if (gamepad2.x) {
+        if (gamepad2.x) {
             if (!gPad2_xWasPressed) {
                 ULTIMATE.armSwing.setPosition(1);
                 gPad2_xWasPressed = true;
@@ -160,9 +160,9 @@ public class Tele_2 extends OpMode {
                 gPad2_xWasPressed = false;
                 sleep(sleepConstant);
             }
-        }*/
+        }
 
-        if(gamepad1.x){
+       /* if(gamepad1.x){
             if(ULTIMATE.armSwing.getPosition() == .35){
                 ULTIMATE.armSwing.setPosition(1);
                 sleep(sleepConstant);
@@ -178,7 +178,7 @@ public class Tele_2 extends OpMode {
             else{
                 telemetry.addLine("error with armSwing");
             }
-        }
+        }*/
 
         /* moves the swing servo all the way up so we can get the wobble goal above the wall
         if(gamepad2.right_bumper){
