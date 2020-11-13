@@ -1,6 +1,4 @@
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -9,7 +7,7 @@ public class ULTIMATEHardware {
     // Hardware Map. Android Studio says this line is unnecessary, but it is in every hardware class
     // we have made before. Eventually I will test it to see what's up, but for now, I don't
     // understand this line. Need to ask Jacob or Zade
-    HardwareMap ultimatehw = null;
+    HardwareMap ulthw = null;
 
     // DC motors
     public DcMotor leftF, leftB, rightF, rightB, // drive motors
@@ -36,7 +34,6 @@ public class ULTIMATEHardware {
         deflector = ulthw.servo.get("deflector");
         armSwing = ulthw.servo.get("armSwing");
         latch = ulthw.servo.get("latch");
-
 
         // This is the best way to account for motors being mounted in the opposite direction.
         // Instead of having to use a negative sign for the motor power value all the time, I can

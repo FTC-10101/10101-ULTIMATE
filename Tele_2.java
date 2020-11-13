@@ -1,15 +1,12 @@
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-
-
 @TeleOp
 //@Disabled
 public class Tele_2 extends OpMode {
 
     // Inherits hardware class
     private ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
-
 
     boolean bToggle = false;
     boolean xWasPressed = false;
@@ -57,10 +54,6 @@ public class Tele_2 extends OpMode {
         ULTIMATE.leftB.setPower(backLeftPower);
         ULTIMATE.rightF.setPower(frontRightPower);
         ULTIMATE.rightB.setPower(backRightPower);
-        telemetry.addData("Left Front Power", (float) frontLeftPower);
-        telemetry.addData("Left Rear Power", (float) backLeftPower);
-        telemetry.addData("Right Front Power", (float) frontRightPower);
-        telemetry.addData("Right Rear Power", (float) backRightPower);
         telemetry.addData("armSwing position: ", ULTIMATE.armSwing.getPosition());
 
         // Below is an option for the primary driver to use the dpad to move for slower, more
@@ -102,8 +95,6 @@ public class Tele_2 extends OpMode {
             ULTIMATE.intake.setPower(0);
         }
 
-
-
         // move the "trigger"
         if (gamepad1.a) {
             ULTIMATE.trigger.setPosition(.8);
@@ -123,8 +114,6 @@ public class Tele_2 extends OpMode {
                 sleep(sleepConstant);
             }
         }
-
-
 
         // Accessory driver's controls
 
@@ -161,8 +150,7 @@ public class Tele_2 extends OpMode {
         }
 
         // move the wobble goal lifter
-        //******remember to make this one button*******
-        if (gamepad2.x) {
+        /*if (gamepad2.x) {
             if (!gPad2_xWasPressed) {
                 ULTIMATE.armSwing.setPosition(1);
                 gPad2_xWasPressed = true;
@@ -172,15 +160,30 @@ public class Tele_2 extends OpMode {
                 gPad2_xWasPressed = false;
                 sleep(sleepConstant);
             }
+        }*/
+
+        if(gamepad1.x){
+            if(ULTIMATE.armSwing.getPosition() == .35){
+                ULTIMATE.armSwing.setPosition(1);
+                sleep(sleepConstant);
+            }
+            else if (ULTIMATE.armSwing.getPosition() == 1){
+                ULTIMATE.armSwing.setPosition(0);
+                sleep(sleepConstant);
+            }
+            else if(ULTIMATE.armSwing.getPosition() == 0){
+                ULTIMATE.armSwing.setPosition(.35);
+                sleep(sleepConstant);
+            }
+            else{
+                telemetry.addLine("error with armSwing");
+            }
         }
 
-
-        // moves the swing servo all the way up so we can get the wobble goal above the wall
+        /* moves the swing servo all the way up so we can get the wobble goal above the wall
         if(gamepad2.right_bumper){
             ULTIMATE.armSwing.setPosition(0);
-        }
-
-
+        }*/
 
         // move wobble goal latch
         if (gamepad2.y) {
