@@ -150,7 +150,7 @@ public class Tele_2 extends OpMode {
         }
 
         // move the wobble goal lifter
-        /*if (gamepad2.x) {
+        if (gamepad2.x) {
             if (!gPad2_xWasPressed) {
                 ULTIMATE.armSwing.setPosition(1);
                 gPad2_xWasPressed = true;
@@ -160,9 +160,9 @@ public class Tele_2 extends OpMode {
                 gPad2_xWasPressed = false;
                 sleep(sleepConstant);
             }
-        }*/
+        }
 
-        if(gamepad2.x){
+       /* if(gamepad1.x){
             if(ULTIMATE.armSwing.getPosition() == .35){
                 ULTIMATE.armSwing.setPosition(1);
                 sleep(sleepConstant);
@@ -178,7 +178,7 @@ public class Tele_2 extends OpMode {
             else{
                 telemetry.addLine("error with armSwing");
             }
-        }
+        }*/
 
         /* moves the swing servo all the way up so we can get the wobble goal above the wall
         if(gamepad2.right_bumper){
