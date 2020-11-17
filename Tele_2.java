@@ -12,8 +12,8 @@ public class Tele_2 extends OpMode {
     boolean xWasPressed = false;
     boolean gPad2_AToggle = false;
     boolean gPad2_BWasPressed = false;
-    boolean gPad2_yWasPressed = false;
     boolean gPad2_xWasPressed = false;
+    boolean gPad2_yWasPressed = false;
     int sleepConstant = 200;
 
 
@@ -124,8 +124,8 @@ public class Tele_2 extends OpMode {
         }
 
         if (gPad2_AToggle) {
-            ULTIMATE.shoot1.setPower(.75);
-            ULTIMATE.shoot2.setPower(.75);
+            ULTIMATE.shoot1.setPower(1);
+            ULTIMATE.shoot2.setPower(1);
         } else {
             ULTIMATE.shoot1.setPower(0);
             ULTIMATE.shoot2.setPower(0);
@@ -138,7 +138,7 @@ public class Tele_2 extends OpMode {
                 gPad2_BWasPressed = true;
                 sleep(sleepConstant);
             } else {
-                ULTIMATE.catchPlate.setPosition(.84);
+                ULTIMATE.catchPlate.setPosition(.85);
                 gPad2_BWasPressed = false;
                 sleep(sleepConstant);
             }
@@ -162,7 +162,11 @@ public class Tele_2 extends OpMode {
             }
         }*/
 
+<<<<<<< HEAD
         if(gamepad2.x){
+=======
+        if(gamepad1.x){
+>>>>>>> parent of e408575... Tweaked auto and tele after testing
             if(ULTIMATE.armSwing.getPosition() == .35){
                 ULTIMATE.armSwing.setPosition(1);
                 sleep(sleepConstant);
