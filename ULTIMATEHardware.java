@@ -1,6 +1,10 @@
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+
 
 public class ULTIMATEHardware {
 
@@ -16,6 +20,8 @@ public class ULTIMATEHardware {
 
     // Servos
     public Servo catchPlate, trigger, deflector, armSwing, latch;
+
+    OpenCvCamera Webcam1;
 
     public ULTIMATEHardware() { } // default constructor. Another line that seems unnecessary to me
     // but we have have used it in years past
@@ -34,6 +40,9 @@ public class ULTIMATEHardware {
         deflector = ulthw.servo.get("deflector");
         armSwing = ulthw.servo.get("armSwing");
         latch = ulthw.servo.get("latch");
+
+        int cameraMonitorViewId = ulthw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", ulthw.appContext.getPackageName());
+        Webcam1 = OpenCvCameraFactory.getInstance().createWebcam(ulthw.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
         // This is the best way to account for motors being mounted in the opposite direction.
         // Instead of having to use a negative sign for the motor power value all the time, I can
