@@ -10,6 +10,7 @@ public class Tele_2 extends OpMode {
 
     boolean bToggle = false;
     boolean xWasPressed = false;
+    boolean yWasPressed = false;
     boolean gPad2_AToggle = false;
     boolean gPad2_BWasPressed = false;
     boolean gPad2_yWasPressed = false;
@@ -114,6 +115,17 @@ public class Tele_2 extends OpMode {
                 sleep(sleepConstant);
             }
         }
+        if (gamepad1.y) {
+            if (!yWasPressed) {
+                ULTIMATE.lapBar.setPosition(1);
+                yWasPressed = true;
+                sleep(sleepConstant);
+            } else {
+                ULTIMATE.lapBar.setPosition(0);
+                yWasPressed = false;
+                sleep(sleepConstant);
+            }
+        }
 
         // Accessory driver's controls
 
@@ -124,8 +136,8 @@ public class Tele_2 extends OpMode {
         }
 
         if (gPad2_AToggle) {
-            ULTIMATE.shoot1.setPower(.75);
-            ULTIMATE.shoot2.setPower(.75);
+            ULTIMATE.shoot1.setPower(.7);
+            ULTIMATE.shoot2.setPower(.7);
         } else {
             ULTIMATE.shoot1.setPower(0);
             ULTIMATE.shoot2.setPower(0);
@@ -138,7 +150,7 @@ public class Tele_2 extends OpMode {
                 gPad2_BWasPressed = true;
                 sleep(sleepConstant);
             } else {
-                ULTIMATE.catchPlate.setPosition(.84);
+                ULTIMATE.catchPlate.setPosition(.85);
                 gPad2_BWasPressed = false;
                 sleep(sleepConstant);
             }
@@ -162,16 +174,16 @@ public class Tele_2 extends OpMode {
             }
         }
 
-       /* if(gamepad1.x){
-            if(ULTIMATE.armSwing.getPosition() == .35){
+        /*if(gamepad1.x){
+            if(ULTIMATE.armSwing.getPosition() > .35 && ULTIMATE.armSwing.getPosition() < .4 ){
                 ULTIMATE.armSwing.setPosition(1);
                 sleep(sleepConstant);
             }
-            else if (ULTIMATE.armSwing.getPosition() == 1){
+            else if (ULTIMATE.armSwing.getPosition() > .41){
                 ULTIMATE.armSwing.setPosition(0);
                 sleep(sleepConstant);
             }
-            else if(ULTIMATE.armSwing.getPosition() == 0){
+            else if(ULTIMATE.armSwing.getPosition() < .34){
                 ULTIMATE.armSwing.setPosition(.35);
                 sleep(sleepConstant);
             }
@@ -180,10 +192,10 @@ public class Tele_2 extends OpMode {
             }
         }*/
 
-        /* moves the swing servo all the way up so we can get the wobble goal above the wall
+        //moves the swing servo all the way up so we can get the wobble goal above the wall
         if(gamepad2.right_bumper){
             ULTIMATE.armSwing.setPosition(0);
-        }*/
+        }
 
         // move wobble goal latch
         if (gamepad2.y) {

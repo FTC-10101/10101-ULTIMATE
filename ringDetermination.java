@@ -20,13 +20,13 @@ import org.openftc.easyopencv.OpenCvPipeline;
         static final Scalar BLUE = new Scalar(0, 0, 255);
         static final Scalar GREEN = new Scalar(0, 255, 0);
 
-      static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(490,320);
+      static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(480,240);
 
-        static final int REGION_WIDTH = 70;
-        static final int REGION_HEIGHT = 70;
+        static final int REGION_WIDTH = 120;
+        static final int REGION_HEIGHT = 130;
 
-        final int FOUR_RING_THRESHOLD = 150;
-        final int ONE_RING_THRESHOLD = 135;
+        final int FOUR_RING_THRESHOLD = 140;
+        final int ONE_RING_THRESHOLD = 128;
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,

@@ -16,8 +16,6 @@ public class moveWobbleGoal extends LinearOpMode {
     int sleepConstant = 1700;
     double powerConstant = .6;
 
-
-
         @Override
         public void runOpMode() throws InterruptedException {
 
@@ -44,8 +42,8 @@ public class moveWobbleGoal extends LinearOpMode {
             });
 
             while(!isStarted()) {
-                telemetry.addData("test: ", vision.getAnalysis());
-                telemetry.addData("test2: ", vision.position);
+                telemetry.addData("Analysis: ", vision.getAnalysis());
+                telemetry.addData("Position: ", vision.position);
                 telemetry.update();
             }
 
@@ -61,7 +59,7 @@ public class moveWobbleGoal extends LinearOpMode {
                     sleep(sleepConstant);
 
                     // drive straight until in front of A box
-                    drive(powerConstant, 1100);
+                    drive(powerConstant, 1025);
                     sleep(sleepConstant);
 
                     // move arm out to drop wobble goal
@@ -84,17 +82,16 @@ public class moveWobbleGoal extends LinearOpMode {
                     ULTIMATE.armSwing.setPosition(0);
                     sleep(sleepConstant);
 
-                    // move back slightly as insurance that we'll clear wobble goal
-                    drive(-powerConstant,100);
-                    sleep(sleepConstant);
-
                     // move in front of tower goal
-                    strafe(.6, 900);
+                    strafe(.6, 1150);
                     sleep(sleepConstant);
 
                     // attempt to move to our shooting spot
-                    drive(powerConstant, 275);
+                    drive(powerConstant, 155);
                     sleep(sleepConstant);
+
+
+
 
                     // finish program
                     rest();
@@ -112,11 +109,11 @@ public class moveWobbleGoal extends LinearOpMode {
                     sleep(sleepConstant);
 
                     // strafe right to get in front of B box
-                    strafe(.6,900);
+                    strafe(.6,1150);
                     sleep(sleepConstant);
 
                     // move forward closer to B box
-                    drive(powerConstant,500);
+                    drive(powerConstant,300);
                     sleep(sleepConstant);
 
                     // move arm out to drop wobble goal
@@ -140,7 +137,7 @@ public class moveWobbleGoal extends LinearOpMode {
                     sleep(sleepConstant);
 
                     // move back to get to our shooting spot
-                    drive(-powerConstant,275);
+                    drive(-powerConstant,225);
                     sleep(sleepConstant);
 
                     // finish program
@@ -155,7 +152,7 @@ public class moveWobbleGoal extends LinearOpMode {
                     sleep(sleepConstant);
 
                     // drive straight until in front of C box
-                    drive(powerConstant, 2500);
+                    drive(powerConstant, 2225);
                     sleep(sleepConstant);
 
                     // move arm out to drop wobble goal
@@ -183,17 +180,19 @@ public class moveWobbleGoal extends LinearOpMode {
                     sleep(sleepConstant);
 
                     // move in front of tower goal
-                    strafe(.6, 800);
+                    strafe(.6, 950);
                     sleep(sleepConstant);
 
                     // attempt to move to our shooting spot
-                    drive(-powerConstant, 640);
+                    drive(-powerConstant, 600);
                     sleep(sleepConstant);
 
                     // finish program
                     rest();
 
                 default:
+                    telemetry.addLine("Problem with vision. Defaulting to A box");
+
                     //initialize latch to hold wobble goal
                     ULTIMATE.latch.setPosition(1);
                     sleep(sleepConstant);
@@ -233,11 +232,11 @@ public class moveWobbleGoal extends LinearOpMode {
                     // attempt to move to our shooting spot
                     drive(powerConstant, 275);
                     sleep(sleepConstant);
+            }
 
                     // finish program
                     rest();
             }
-        }
 
     private void drive (double power, int time){
         ULTIMATE.leftF.setPower(power);
@@ -269,14 +268,15 @@ public class moveWobbleGoal extends LinearOpMode {
         ULTIMATE.extensionArm.setPower(0);
     }
 
+
     private void rest(){
 
             // turn flywheel on
-        ULTIMATE.shoot1.setPower(.75);
-        ULTIMATE.shoot2.setPower(.75);
+        ULTIMATE.shoot1.setPower(.64);
+        ULTIMATE.shoot2.setPower(.64);
 
         // move catchplate into shooting position
-        ULTIMATE.catchPlate.setPosition(.84);
+        ULTIMATE.catchPlate.setPosition(.85);
         sleep(sleepConstant);
 
         // move the trigger to shoot the preloaded rings three times
@@ -294,7 +294,7 @@ public class moveWobbleGoal extends LinearOpMode {
         sleep(100);
 
         // park
-        drive(1, 200);
+        drive(1, 150);
         sleep(sleepConstant);
 
         // turn motors off and put catchplate back to normal position
@@ -307,3 +307,4 @@ public class moveWobbleGoal extends LinearOpMode {
         stop();
     }
 }
+
