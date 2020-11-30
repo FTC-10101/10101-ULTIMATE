@@ -4,12 +4,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 // class for testing minor changes
 @Autonomous
-public class test extends LinearOpMode {
+public class test extends autonomousSuper {
 
     ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
-    autonomousSuper auto = new autonomousSuper();
 
-    public void runOpMode() throws InterruptedException{
+    public void runOpMode(){
 
         ULTIMATE.init(hardwareMap);
 
@@ -21,9 +20,11 @@ public class test extends LinearOpMode {
         waitForStart();
 
 
-        auto.driveEncoders(.3, 100);
+        driveHalt();
+        driveEncoders(.3, 100);
         sleep(500);
         stop();
 
     }
+
 }

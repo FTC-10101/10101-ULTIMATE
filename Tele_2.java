@@ -106,11 +106,11 @@ public class Tele_2 extends OpMode {
         // move the "deflector"
         if (gamepad1.x) {
             if (!xWasPressed) {
-                ULTIMATE.deflector.setPosition(.55);
+                ULTIMATE.deflector.setPosition(0);
                xWasPressed = true;
                 sleep(sleepConstant);
             } else {
-                ULTIMATE.deflector.setPosition(1);
+                ULTIMATE.deflector.setPosition(.83);
                 xWasPressed = false;
                 sleep(sleepConstant);
             }

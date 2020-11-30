@@ -13,7 +13,7 @@ public class moveWobbleGoal extends LinearOpMode {
     ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
     ringDetermination vision = new ringDetermination();
     OpenCvCamera Webcam1;
-    int sleepConstant = 1700;
+    int sleepConstant = 1500;
     double powerConstant = .6;
 
         @Override
@@ -52,35 +52,22 @@ public class moveWobbleGoal extends LinearOpMode {
 
             switch (vision.position) {
                 case NONE:
+                    telemetry.clearAll();
                     telemetry.addLine("none");
+                    telemetry.update();
 
-                    //initialize latch to hold wobble goal
+                    //initialize latch to hold wobble goal and deflector to shoot
                     ULTIMATE.latch.setPosition(1);
+                    ULTIMATE.deflector.setPosition(0);
                     sleep(sleepConstant);
 
                     // drive straight until in front of A box
                     drive(powerConstant, 1025);
                     sleep(sleepConstant);
 
-                    // move arm out to drop wobble goal
-                    moveExtensionArm(1,1500);
-                    sleep(sleepConstant);
 
-                    // lower wobble goal holding arm
-                    ULTIMATE.armSwing.setPosition(1);
-                    sleep(sleepConstant);
-
-                    // unlatch wobble goal
-                    ULTIMATE.latch.setPosition(0);
-                    sleep(200);
-
-                    // retract extension arm
-                    moveExtensionArm(-1,1500);
-                    sleep(sleepConstant);
-
-                    // move holding arm back up
-                    ULTIMATE.armSwing.setPosition(0);
-                    sleep(sleepConstant);
+                    // place wobble goal
+                    dropWobbleGoal();
 
                     // move in front of tower goal
                     strafe(.6, 1150);
@@ -98,7 +85,9 @@ public class moveWobbleGoal extends LinearOpMode {
                     break;
 
                 case ONE:
+                    telemetry.clearAll();
                     telemetry.addLine("one");
+                    telemetry.update();
 
                     //initialize latch to hold wobble goal
                     ULTIMATE.latch.setPosition(1);
@@ -116,25 +105,8 @@ public class moveWobbleGoal extends LinearOpMode {
                     drive(powerConstant,300);
                     sleep(sleepConstant);
 
-                    // move arm out to drop wobble goal
-                    moveExtensionArm(1,1500);
-                    sleep(sleepConstant);
-
-                    // lower wobble goal holding arm
-                    ULTIMATE.armSwing.setPosition(1);
-                    sleep(sleepConstant);
-
-                    // unlatch wobble goal
-                    ULTIMATE.latch.setPosition(0);
-                    sleep(500);
-
-                    // retract extension arm
-                    moveExtensionArm(-1,1500);
-                    sleep(sleepConstant);
-
-                    // move holding arm back up
-                    ULTIMATE.armSwing.setPosition(0);
-                    sleep(sleepConstant);
+                    // place wobble goal
+                    dropWobbleGoal();
 
                     // move back to get to our shooting spot
                     drive(-powerConstant,225);
@@ -145,7 +117,9 @@ public class moveWobbleGoal extends LinearOpMode {
                     break;
 
                 case FOUR:
+                    telemetry.clearAll();
                     telemetry.addLine("four");
+                    telemetry.update();
 
                     //initialize latch to hold wobble goal
                     ULTIMATE.latch.setPosition(1);
@@ -155,29 +129,8 @@ public class moveWobbleGoal extends LinearOpMode {
                     drive(powerConstant, 2225);
                     sleep(sleepConstant);
 
-                    // move arm out to drop wobble goal
-                    moveExtensionArm(1,1500);
-                    sleep(sleepConstant);
-
-                    // lower wobble goal holding arm
-                    ULTIMATE.armSwing.setPosition(1);
-                    sleep(sleepConstant);
-
-                    // unlatch wobble goal
-                    ULTIMATE.latch.setPosition(0);
-                    sleep(200);
-
-                    // retract extension arm
-                    moveExtensionArm(-1, 1500);
-                    sleep(sleepConstant);
-
-                    // move holding arm back up
-                    ULTIMATE.armSwing.setPosition(0);
-                    sleep(sleepConstant);
-
-                    // move back slightly as insurance that we'll clear wobble goal
-                    drive(-powerConstant,100);
-                    sleep(sleepConstant);
+                    // place wobble goal
+                    dropWobbleGoal();
 
                     // move in front of tower goal
                     strafe(.6, 950);
@@ -191,7 +144,9 @@ public class moveWobbleGoal extends LinearOpMode {
                     rest();
 
                 default:
+                    telemetry.clearAll();
                     telemetry.addLine("Problem with vision. Defaulting to A box");
+                    telemetry.update();
 
                     //initialize latch to hold wobble goal
                     ULTIMATE.latch.setPosition(1);
@@ -201,29 +156,8 @@ public class moveWobbleGoal extends LinearOpMode {
                     drive(powerConstant, 1100);
                     sleep(sleepConstant);
 
-                    // move arm out to drop wobble goal
-                    moveExtensionArm(1,1500);
-                    sleep(sleepConstant);
-
-                    // lower wobble goal holding arm
-                    ULTIMATE.armSwing.setPosition(1);
-                    sleep(sleepConstant);
-
-                    // unlatch wobble goal
-                    ULTIMATE.latch.setPosition(0);
-                    sleep(200);
-
-                    // retract extension arm
-                    moveExtensionArm(-1,1500);
-                    sleep(sleepConstant);
-
-                    // move holding arm back up
-                    ULTIMATE.armSwing.setPosition(0);
-                    sleep(sleepConstant);
-
-                    // move back slightly as insurance that we'll clear wobble goal
-                    drive(-powerConstant,100);
-                    sleep(sleepConstant);
+                    // place wobble goal
+                    dropWobbleGoal();
 
                     // move in front of tower goal
                     strafe(.6, 900);
@@ -266,6 +200,34 @@ public class moveWobbleGoal extends LinearOpMode {
         ULTIMATE.extensionArm.setPower(power);
         sleep(time);
         ULTIMATE.extensionArm.setPower(0);
+    }
+
+    private void dropWobbleGoal(){
+
+        // move arm out to drop wobble goal
+        moveExtensionArm(1,1500);
+        sleep(sleepConstant);
+
+        // lower wobble goal holding arm
+        ULTIMATE.armSwing.setPosition(1);
+        sleep(sleepConstant);
+
+        // unlatch wobble goal
+        ULTIMATE.latch.setPosition(0);
+        sleep(200);
+
+        // retract extension arm halfway
+        moveExtensionArm(-1,750);
+        sleep(sleepConstant);
+
+        // move holding arm back up
+        ULTIMATE.armSwing.setPosition(0);
+        sleep(sleepConstant);
+
+        // retract extension arm fully
+        moveExtensionArm(-1,750);
+        sleep(sleepConstant);
+
     }
 
 
