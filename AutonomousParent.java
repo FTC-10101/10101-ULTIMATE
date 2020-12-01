@@ -1,13 +1,12 @@
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 
-public class autonomousSuper extends LinearOpMode {
+public class AutonomousParent extends LinearOpMode {
 
 ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
-
-    public autonomousSuper(){}
 
     public void runOpMode(){}
     public void drive (double power){
@@ -19,7 +18,7 @@ ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
     public void driveTime (double power, int time){
         drive(power);
         sleep(time);
-        driveHalt();
+        halt();
     }
 
     public void strafe (double power, int time){
@@ -28,15 +27,16 @@ ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
         ULTIMATE.rightF.setPower(-power);
         ULTIMATE.rightB.setPower(power);
         sleep(time);
-        driveHalt();
-
+        halt();
     }
-    public void driveHalt(){
+
+    public void halt(){
         ULTIMATE.leftF.setPower(0);
         ULTIMATE.leftB.setPower(0);
         ULTIMATE.rightF.setPower(0);
         ULTIMATE.rightB.setPower(0);
     }
+
     public void driveEncoders(double power, int distance){
         ULTIMATE.leftB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ULTIMATE.rightB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -54,15 +54,25 @@ ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
             telemetry.update();
         }
 
-        driveHalt();
+        halt();
 
         ULTIMATE.leftB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ULTIMATE.rightB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
     public void moveExtensionArm (double power, int time){
         ULTIMATE.extensionArm.setPower(power);
         sleep(time);
         ULTIMATE.extensionArm.setPower(0);
+    }
+
+    public void initIMU(){
+        BNO055IMU.Parameters imuParameters = new BNO055IMU.Parameters();
+        imuParameters.mode = BNO055IMU.SensorMode.IMU;
+        imuParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imuParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        imuParameters.loggingEnabled = false;
+        ULTIMATE.imu.initialize(imuParameters);
     }
 
 

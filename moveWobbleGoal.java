@@ -12,16 +12,14 @@ public class moveWobbleGoal extends LinearOpMode {
 
     ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
     ringDetermination vision = new ringDetermination();
-    OpenCvCamera Webcam1;
     int sleepConstant = 1500;
     double powerConstant = .6;
 
         @Override
         public void runOpMode() throws InterruptedException {
 
-            int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-            Webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-            Webcam1.setPipeline(vision);
+
+            ULTIMATE.Webcam1.setPipeline(vision);
 
             ULTIMATE.init(hardwareMap);
 
@@ -34,10 +32,10 @@ public class moveWobbleGoal extends LinearOpMode {
             // out when the RC activity is in portrait. We do our actual image processing assuming
             // landscape orientation, though.
 
-            Webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            ULTIMATE.Webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
                 @Override
                 public void onOpened() {
-                    Webcam1.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                    ULTIMATE.Webcam1.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
                 }
             });
 
@@ -47,130 +45,35 @@ public class moveWobbleGoal extends LinearOpMode {
                 telemetry.update();
             }
 
-            waitForStart();
-            Webcam1.stopStreaming();
+            telemetry.clearAll();
+
+            ULTIMATE.Webcam1.stopStreaming();
 
             switch (vision.position) {
                 case NONE:
-                    telemetry.clearAll();
-                    telemetry.addLine("none");
-                    telemetry.update();
 
-                    //initialize latch to hold wobble goal and deflector to shoot
-                    ULTIMATE.latch.setPosition(1);
-                    ULTIMATE.deflector.setPosition(0);
-                    sleep(sleepConstant);
-
-                    // drive straight until in front of A box
-                    drive(powerConstant, 1025);
-                    sleep(sleepConstant);
-
-
-                    // place wobble goal
-                    dropWobbleGoal();
-
-                    // move in front of tower goal
-                    strafe(.6, 1150);
-                    sleep(sleepConstant);
-
-                    // attempt to move to our shooting spot
-                    drive(powerConstant, 155);
-                    sleep(sleepConstant);
-
-
-
-
-                    // finish program
-                    rest();
+                    case_A();
                     break;
 
                 case ONE:
-                    telemetry.clearAll();
-                    telemetry.addLine("one");
-                    telemetry.update();
 
-                    //initialize latch to hold wobble goal
-                    ULTIMATE.latch.setPosition(1);
-                    sleep(sleepConstant);
-
-                    // drive straight until in front of A box
-                    drive(powerConstant, 1100);
-                    sleep(sleepConstant);
-
-                    // strafe right to get in front of B box
-                    strafe(.6,1150);
-                    sleep(sleepConstant);
-
-                    // move forward closer to B box
-                    drive(powerConstant,300);
-                    sleep(sleepConstant);
-
-                    // place wobble goal
-                    dropWobbleGoal();
-
-                    // move back to get to our shooting spot
-                    drive(-powerConstant,225);
-                    sleep(sleepConstant);
-
-                    // finish program
-                    rest();
+                    case_B();
                     break;
 
                 case FOUR:
-                    telemetry.clearAll();
-                    telemetry.addLine("four");
-                    telemetry.update();
 
-                    //initialize latch to hold wobble goal
-                    ULTIMATE.latch.setPosition(1);
-                    sleep(sleepConstant);
-
-                    // drive straight until in front of C box
-                    drive(powerConstant, 2225);
-                    sleep(sleepConstant);
-
-                    // place wobble goal
-                    dropWobbleGoal();
-
-                    // move in front of tower goal
-                    strafe(.6, 950);
-                    sleep(sleepConstant);
-
-                    // attempt to move to our shooting spot
-                    drive(-powerConstant, 600);
-                    sleep(sleepConstant);
-
-                    // finish program
-                    rest();
+                    case_C();
+                    break;
 
                 default:
-                    telemetry.clearAll();
                     telemetry.addLine("Problem with vision. Defaulting to A box");
                     telemetry.update();
 
-                    //initialize latch to hold wobble goal
-                    ULTIMATE.latch.setPosition(1);
-                    sleep(sleepConstant);
-
-                    // drive straight until in front of A box
-                    drive(powerConstant, 1100);
-                    sleep(sleepConstant);
-
-                    // place wobble goal
-                    dropWobbleGoal();
-
-                    // move in front of tower goal
-                    strafe(.6, 900);
-                    sleep(sleepConstant);
-
-                    // attempt to move to our shooting spot
-                    drive(powerConstant, 275);
-                    sleep(sleepConstant);
+                    case_A();
             }
-
-                    // finish program
-                    rest();
-            }
+            telemetry.addLine("done");
+            telemetry.update();
+        }
 
     private void drive (double power, int time){
         ULTIMATE.leftF.setPower(power);
@@ -230,6 +133,95 @@ public class moveWobbleGoal extends LinearOpMode {
 
     }
 
+    private void case_A(){
+
+        telemetry.addLine("none");
+        telemetry.update();
+
+        //initialize latch to hold wobble goal and deflector to shoot
+        ULTIMATE.latch.setPosition(1);
+        ULTIMATE.deflector.setPosition(0);
+        sleep(sleepConstant);
+
+        // drive straight until in front of A box
+        drive(powerConstant, 1025);
+        sleep(sleepConstant);
+
+
+        // place wobble goal
+        dropWobbleGoal();
+
+        // move in front of tower goal
+        strafe(.6, 1150);
+        sleep(sleepConstant);
+
+        // attempt to move to our shooting spot
+        drive(powerConstant, 155);
+        sleep(sleepConstant);
+
+        // finish OpMode
+        rest();
+    }
+
+    private void case_B(){
+
+        telemetry.addLine("one");
+        telemetry.update();
+
+        //initialize latch to hold wobble goal
+        ULTIMATE.latch.setPosition(1);
+        sleep(sleepConstant);
+
+        // drive straight until in front of A box
+        drive(powerConstant, 1100);
+        sleep(sleepConstant);
+
+        // strafe right to get in front of B box
+        strafe(.6,1150);
+        sleep(sleepConstant);
+
+        // move forward closer to B box
+        drive(powerConstant,300);
+        sleep(sleepConstant);
+
+        // place wobble goal
+        dropWobbleGoal();
+
+        // move back to get to our shooting spot
+        drive(-powerConstant,225);
+        sleep(sleepConstant);
+
+        // finish OpMode
+        rest();
+    }
+
+    private void case_C(){
+
+        telemetry.addLine("four");
+        telemetry.update();
+
+        //initialize latch to hold wobble goal
+        ULTIMATE.latch.setPosition(1);
+        sleep(sleepConstant);
+
+        // drive straight until in front of C box
+        drive(powerConstant, 2225);
+        sleep(sleepConstant);
+
+        // place wobble goal
+        dropWobbleGoal();
+
+        // move in front of tower goal
+        strafe(.6, 950);
+        sleep(sleepConstant);
+
+        // attempt to move to our shooting spot
+        drive(-powerConstant, 600);
+        sleep(sleepConstant);
+
+        // finish OpMode
+        rest();
+    }
 
     private void rest(){
 
