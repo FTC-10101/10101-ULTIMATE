@@ -31,15 +31,16 @@ public class Tele_2 extends OpMode {
 
     public void init() {
         // Initializes hardware map for the control hub
-        ULTIMATE.init(hardwareMap);
+        ULTIMATE.init(hardwareMap,false);
 
+        // Makes sure servos are in the right position
         ULTIMATE.armSwing.setPosition(.35);
+        ULTIMATE.catchPlate.setPosition(1);
     }
 
     public void loop() {
 
-        // Primary driver's controls
-
+        // --------------------------------Primary driver's controls--------------------------------
         // Driving
         double drive;   // Power for forward and back motion
         double strafe;  // Power for left and right motion
@@ -110,7 +111,7 @@ public class Tele_2 extends OpMode {
                xWasPressed = true;
                 sleep(sleepConstant);
             } else {
-                ULTIMATE.deflector.setPosition(.83);
+                ULTIMATE.deflector.setPosition(1);
                 xWasPressed = false;
                 sleep(sleepConstant);
             }
@@ -127,7 +128,8 @@ public class Tele_2 extends OpMode {
             }
         }
 
-        // Accessory driver's controls
+
+        //----------------- Accessory driver's controls --------------------------------------------
 
         // move the shoot wheel motors
         if (gamepad2.a) {

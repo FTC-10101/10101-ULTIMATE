@@ -2,13 +2,18 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-
-
-public class AutonomousParent extends LinearOpMode {
+public class AutonomousParent {
 
 ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
+private LinearOpMode lOpMode;
 
-    public void runOpMode(){}
+
+
+
+public AutonomousParent (LinearOpMode lom){
+    this.lOpMode = lom;
+}
+
     public void drive (double power){
         ULTIMATE.leftF.setPower(power);
         ULTIMATE.leftB.setPower(power);
@@ -17,7 +22,7 @@ ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
     }
     public void driveTime (double power, int time){
         drive(power);
-        sleep(time);
+        lOpMode.sleep(time);
         halt();
     }
 
@@ -26,7 +31,7 @@ ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
         ULTIMATE.leftB.setPower(-power);
         ULTIMATE.rightF.setPower(-power);
         ULTIMATE.rightB.setPower(power);
-        sleep(time);
+        lOpMode.sleep(time);
         halt();
     }
 
@@ -49,9 +54,9 @@ ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
 
         drive(power);
 
-        while( ULTIMATE.leftB.isBusy() && ULTIMATE.rightB.isBusy()){
-            telemetry.addLine("busy");
-            telemetry.update();
+        while (ULTIMATE.leftB.isBusy() && ULTIMATE.rightB.isBusy()){
+            lOpMode.telemetry.addLine("busy");
+            lOpMode.telemetry.update();
         }
 
         halt();
@@ -62,7 +67,7 @@ ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
 
     public void moveExtensionArm (double power, int time){
         ULTIMATE.extensionArm.setPower(power);
-        sleep(time);
+        lOpMode.sleep(time);
         ULTIMATE.extensionArm.setPower(0);
     }
 

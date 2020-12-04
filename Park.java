@@ -9,7 +9,7 @@ public class Park extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException{
 
-        ULTIMATE.init(hardwareMap);
+        ULTIMATE.init(hardwareMap,false);
 
         ULTIMATE.leftB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         ULTIMATE.leftF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

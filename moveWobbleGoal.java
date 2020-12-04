@@ -12,7 +12,7 @@ public class moveWobbleGoal extends LinearOpMode {
 
     ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
     ringDetermination vision = new ringDetermination();
-    int sleepConstant = 1500;
+    int sleepConstant = 1400;
     double powerConstant = .6;
 
         @Override
@@ -21,12 +21,7 @@ public class moveWobbleGoal extends LinearOpMode {
 
             ULTIMATE.Webcam1.setPipeline(vision);
 
-            ULTIMATE.init(hardwareMap);
-
-            ULTIMATE.leftB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            ULTIMATE.leftF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            ULTIMATE.rightB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            ULTIMATE.rightF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            ULTIMATE.init(hardwareMap, false);
 
             // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
             // out when the RC activity is in portrait. We do our actual image processing assuming
@@ -44,33 +39,92 @@ public class moveWobbleGoal extends LinearOpMode {
                 telemetry.addData("Position: ", vision.position);
                 telemetry.update();
             }
-
             telemetry.clearAll();
 
             ULTIMATE.Webcam1.stopStreaming();
 
+            //initialize latch to hold wobble goal and deflector to shoot
+            ULTIMATE.latch.setPosition(1);
+            ULTIMATE.deflector.setPosition(0);
+            sleep(sleepConstant);
+
             switch (vision.position) {
-                case NONE:
-
-                    case_A();
-                    break;
-
                 case ONE:
+                    telemetry.addLine("one");
+                    telemetry.update();
 
-                    case_B();
+
+
+                    // drive straight until in front of A box
+                    drive(powerConstant, 1100);
+                    sleep(sleepConstant);
+
+                    // strafe right to get in front of B box
+                    strafe(powerConstant,1150);
+                    sleep(sleepConstant);
+
+                    // move forward closer to B box
+                    drive(powerConstant,300);
+                    sleep(sleepConstant);
+
+                    // place wobble goal
+                    dropWobbleGoal();
+
+                    // move back to get to our shooting spot
+                    drive(-powerConstant,225);
+                    sleep(sleepConstant);
+
+                    // finish OpMode
+                    rest();
                     break;
 
                 case FOUR:
+                    telemetry.addLine("four");
+                    telemetry.update();
 
-                    case_C();
+                    // drive straight until in front of C box
+                    drive(powerConstant, 2225);
+                    sleep(sleepConstant);
+
+                    // place wobble goal
+                    dropWobbleGoal();
+
+                    // move in front of tower goal
+                    strafe(powerConstant, 950);
+                    sleep(sleepConstant);
+
+                    // attempt to move to our shooting spot
+                    drive(-powerConstant, 600);
+                    sleep(sleepConstant);
+
+                    // finish OpMode
+                    rest();
                     break;
 
                 default:
-                    telemetry.addLine("Problem with vision. Defaulting to A box");
+                    telemetry.addLine("none");
                     telemetry.update();
 
-                    case_A();
+
+                    // drive straight until in front of A box
+                    drive(powerConstant, 1025);
+                    sleep(sleepConstant);
+
+                    // place wobble goal
+                    dropWobbleGoal();
+
+                    // move in front of tower goal
+                    strafe(.6, 1150);
+                    sleep(sleepConstant);
+
+                    // attempt to move to our shooting spot
+                    drive(powerConstant, 155);
+                    sleep(sleepConstant);
+
+                    // finish OpMode
+                    rest();
             }
+            telemetry.clearAll();
             telemetry.addLine("done");
             telemetry.update();
         }
@@ -81,10 +135,7 @@ public class moveWobbleGoal extends LinearOpMode {
         ULTIMATE.rightF.setPower(power);
         ULTIMATE.rightB.setPower(power);
         sleep(time);
-        ULTIMATE.leftF.setPower(0);
-        ULTIMATE.leftB.setPower(0);
-        ULTIMATE.rightF.setPower(0);
-        ULTIMATE.rightB.setPower(0);
+        halt();
     }
 
     private void strafe (double power, int time){
@@ -93,6 +144,9 @@ public class moveWobbleGoal extends LinearOpMode {
         ULTIMATE.rightF.setPower(-power);
         ULTIMATE.rightB.setPower(power);
         sleep(time);
+        halt();
+    }
+    private void halt(){
         ULTIMATE.leftF.setPower(0);
         ULTIMATE.leftB.setPower(0);
         ULTIMATE.rightF.setPower(0);
@@ -133,96 +187,6 @@ public class moveWobbleGoal extends LinearOpMode {
 
     }
 
-    private void case_A(){
-
-        telemetry.addLine("none");
-        telemetry.update();
-
-        //initialize latch to hold wobble goal and deflector to shoot
-        ULTIMATE.latch.setPosition(1);
-        ULTIMATE.deflector.setPosition(0);
-        sleep(sleepConstant);
-
-        // drive straight until in front of A box
-        drive(powerConstant, 1025);
-        sleep(sleepConstant);
-
-
-        // place wobble goal
-        dropWobbleGoal();
-
-        // move in front of tower goal
-        strafe(.6, 1150);
-        sleep(sleepConstant);
-
-        // attempt to move to our shooting spot
-        drive(powerConstant, 155);
-        sleep(sleepConstant);
-
-        // finish OpMode
-        rest();
-    }
-
-    private void case_B(){
-
-        telemetry.addLine("one");
-        telemetry.update();
-
-        //initialize latch to hold wobble goal
-        ULTIMATE.latch.setPosition(1);
-        sleep(sleepConstant);
-
-        // drive straight until in front of A box
-        drive(powerConstant, 1100);
-        sleep(sleepConstant);
-
-        // strafe right to get in front of B box
-        strafe(.6,1150);
-        sleep(sleepConstant);
-
-        // move forward closer to B box
-        drive(powerConstant,300);
-        sleep(sleepConstant);
-
-        // place wobble goal
-        dropWobbleGoal();
-
-        // move back to get to our shooting spot
-        drive(-powerConstant,225);
-        sleep(sleepConstant);
-
-        // finish OpMode
-        rest();
-    }
-
-    private void case_C(){
-
-        telemetry.addLine("four");
-        telemetry.update();
-
-        //initialize latch to hold wobble goal
-        ULTIMATE.latch.setPosition(1);
-        sleep(sleepConstant);
-
-        // drive straight until in front of C box
-        drive(powerConstant, 2225);
-        sleep(sleepConstant);
-
-        // place wobble goal
-        dropWobbleGoal();
-
-        // move in front of tower goal
-        strafe(.6, 950);
-        sleep(sleepConstant);
-
-        // attempt to move to our shooting spot
-        drive(-powerConstant, 600);
-        sleep(sleepConstant);
-
-        // finish OpMode
-        rest();
-    }
-
     private void rest(){
 
             // turn flywheel on
@@ -234,18 +198,12 @@ public class moveWobbleGoal extends LinearOpMode {
         sleep(sleepConstant);
 
         // move the trigger to shoot the preloaded rings three times
-        ULTIMATE.trigger.setPosition(.8);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(.0);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(.8);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(.0);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(.8);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(.0);
-        sleep(100);
+        for (int i = 0; i < 3; i++) {
+            ULTIMATE.trigger.setPosition(.8);
+            sleep(800);
+            ULTIMATE.trigger.setPosition(.0);
+            sleep(800);
+        }
 
         // park
         drive(1, 150);

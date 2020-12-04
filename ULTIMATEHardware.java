@@ -12,7 +12,7 @@ public class ULTIMATEHardware {
     // Hardware Map. Android Studio says this line is unnecessary, but it is in every hardware class
     // we have made before. Eventually I will test it to see what's up, but for now, I don't
     // understand this line. Need to ask Jacob or Zade
-    HardwareMap ulthw = null;
+    HardwareMap ulthw;
 
     // DC motors
     public DcMotor leftF, leftB, rightF, rightB, // drive motors
@@ -28,10 +28,7 @@ public class ULTIMATEHardware {
     // External Webcam
     OpenCvCamera Webcam1;
 
-    public ULTIMATEHardware() { } // default constructor. Another line that seems unnecessary to me
-    // but we have have used it in years past
-
-    public void init(HardwareMap ulthw) {
+    public void init (HardwareMap ulthw, boolean encoders) {
 
         leftB = ulthw.dcMotor.get("leftB");
         rightB = ulthw.dcMotor.get("rightB");
@@ -62,6 +59,17 @@ public class ULTIMATEHardware {
         intake.setDirection(DcMotor.Direction.REVERSE);
         leftF.setDirection(DcMotor.Direction.REVERSE);
         leftB.setDirection(DcMotor.Direction.REVERSE);
+
+        if (encoders) {
+            leftB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+        else {
+            leftB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        rightB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 }
