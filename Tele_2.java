@@ -31,7 +31,7 @@ public class Tele_2 extends OpMode {
 
     public void init() {
         // Initializes hardware map for the control hub
-        ULTIMATE.init(hardwareMap,false);
+        ULTIMATE.init(hardwareMap,false,false);
 
         // Makes sure servos are in the right position
         ULTIMATE.armSwing.setPosition(.35);
@@ -61,28 +61,28 @@ public class Tele_2 extends OpMode {
         // Below is an option for the primary driver to use the dpad to move for slower, more
         // precise movements
         if (gamepad1.dpad_up) {
-            ULTIMATE.leftF.setPower(.8);
-            ULTIMATE.leftB.setPower(.8);
-            ULTIMATE.rightF.setPower(.8);
-            ULTIMATE.rightB.setPower(.8);
+            ULTIMATE.leftF.setPower(.4);
+            ULTIMATE.leftB.setPower(.4);
+            ULTIMATE.rightF.setPower(.4);
+            ULTIMATE.rightB.setPower(.4);
         }
         if (gamepad1.dpad_down) {
-            ULTIMATE.leftF.setPower(-.8);
-            ULTIMATE.leftB.setPower(-.8);
-            ULTIMATE.rightF.setPower(-.8);
-            ULTIMATE.rightB.setPower(-.8);
+            ULTIMATE.leftF.setPower(-.4);
+            ULTIMATE.leftB.setPower(-.4);
+            ULTIMATE.rightF.setPower(-.4);
+            ULTIMATE.rightB.setPower(-.4);
         }
         if (gamepad1.dpad_right) {
-            ULTIMATE.leftF.setPower(.8);
-            ULTIMATE.leftB.setPower(-.8);
-            ULTIMATE.rightF.setPower(-.8);
-            ULTIMATE.rightB.setPower(.8);
+            ULTIMATE.leftF.setPower(.4);
+            ULTIMATE.leftB.setPower(-.4);
+            ULTIMATE.rightF.setPower(-.4);
+            ULTIMATE.rightB.setPower(.4);
         }
         if (gamepad1.dpad_left) {
-            ULTIMATE.leftF.setPower(-.8);
-            ULTIMATE.leftB.setPower(.8);
-            ULTIMATE.rightF.setPower(.8);
-            ULTIMATE.rightB.setPower(-.8);
+            ULTIMATE.leftF.setPower(-.4);
+            ULTIMATE.leftB.setPower(.4);
+            ULTIMATE.rightF.setPower(.4);
+            ULTIMATE.rightB.setPower(-.4);
         }
 
         // move the intake dc motor

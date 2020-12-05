@@ -28,7 +28,7 @@ public class ULTIMATEHardware {
     // External Webcam
     OpenCvCamera Webcam1;
 
-    public void init (HardwareMap ulthw, boolean encoders) {
+    public void init (HardwareMap ulthw, boolean encoders, boolean camera) {
 
         leftB = ulthw.dcMotor.get("leftB");
         rightB = ulthw.dcMotor.get("rightB");
@@ -48,9 +48,10 @@ public class ULTIMATEHardware {
 
         imu = ulthw.get(BNO055IMU.class, "imu");
 
-        int cameraMonitorViewId = ulthw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", ulthw.appContext.getPackageName());
-        Webcam1 = OpenCvCameraFactory.getInstance().createWebcam(ulthw.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-
+        if(camera) {
+            int cameraMonitorViewId = ulthw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", ulthw.appContext.getPackageName());
+            Webcam1 = OpenCvCameraFactory.getInstance().createWebcam(ulthw.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        }
         // This is the best way to account for motors being mounted in the opposite direction.
         // Instead of having to use a negative sign for the motor power value all the time, I can
         // just write these lines are forget about it. It also makes our programs more readable
@@ -61,14 +62,15 @@ public class ULTIMATEHardware {
         leftB.setDirection(DcMotor.Direction.REVERSE);
 
         if (encoders) {
+            rightB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         else {
-            leftB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            leftF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        rightB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //leftB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }

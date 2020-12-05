@@ -10,232 +10,125 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
 public class motorEncoders extends LinearOpMode {
 
-    ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
+    AutonomousParent auto  = new AutonomousParent(this);
+    ULTIMATEHardware ULTIMATE = auto;
     ringDetermination vision = new ringDetermination();
-    OpenCvCamera Webcam1;
-    int sleepConstant = 1700;
-    double powerConstant = .6;
+    double powerConstant = .5;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        Webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        Webcam1.setPipeline(vision);
 
-        ULTIMATE.init(hardwareMap);
+        auto.init();
+        ULTIMATE.init(hardwareMap,true,true);
+        ULTIMATE.Webcam1.setPipeline(vision);
 
-        ULTIMATE.leftB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        ULTIMATE.leftF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        ULTIMATE.rightB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        ULTIMATE.rightF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
         // out when the RC activity is in portrait. We do our actual image processing assuming
         // landscape orientation, though.
 
-        Webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+        ULTIMATE.Webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                Webcam1.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                ULTIMATE.Webcam1.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
             }
         });
 
         while(!isStarted()) {
-            telemetry.addData("test: ", vision.getAnalysis());
-            telemetry.addData("test2: ", vision.position);
+            telemetry.addData("Analysis: ", vision.getAnalysis());
+            telemetry.addData("Position: ", vision.position);
             telemetry.update();
         }
+        telemetry.clearAll();
 
-        waitForStart();
-        Webcam1.stopStreaming();
+        ULTIMATE.Webcam1.stopStreaming();
+
+        //initialize latch to hold wobble goal and deflector to shoot
+        ULTIMATE.latch.setPosition(1);
+        ULTIMATE.deflector.setPosition(0);
+        sleep(auto.sleepConstant);
 
         switch (vision.position) {
-            case NONE:
-                telemetry.addLine("none");
-
-                //initialize latch to hold wobble goal
-                ULTIMATE.latch.setPosition(1);
-                sleep(sleepConstant);
-
-                // drive straight until in front of A box
-                drive(powerConstant, 900);
-                sleep(sleepConstant);
-
-                // move arm out to drop wobble goal
-                moveExtensionArm(1,1500);
-                sleep(sleepConstant);
-
-                // lower wobble goal holding arm
-                ULTIMATE.armSwing.setPosition(1);
-                sleep(sleepConstant);
-
-                // unlatch wobble goal
-                ULTIMATE.latch.setPosition(0);
-                sleep(200);
-
-                // retract extension arm
-                moveExtensionArm(-1,1500);
-                sleep(sleepConstant);
-
-                // move holding arm back up
-                ULTIMATE.armSwing.setPosition(0);
-                sleep(sleepConstant);
-
-                // move in front of tower goal
-                strafe(.6, 1150);
-                sleep(sleepConstant);
-
-                // attempt to move to our shooting spot
-                drive(powerConstant, 200);
-                sleep(sleepConstant);
-
-
-
-
-                // finish program
-                rest();
-                break;
-
             case ONE:
                 telemetry.addLine("one");
+                telemetry.update();
 
-                //initialize latch to hold wobble goal
-                ULTIMATE.latch.setPosition(1);
-                sleep(sleepConstant);
+
 
                 // drive straight until in front of A box
-                drive(powerConstant, 1100);
-                sleep(sleepConstant);
+                auto.driveEncoders(powerConstant,2500);
+                sleep(auto.sleepConstant);
 
                 // strafe right to get in front of B box
-                strafe(.6,1150);
-                sleep(sleepConstant);
+                auto.strafe(powerConstant,1150);
+                sleep(auto.sleepConstant);
 
                 // move forward closer to B box
-                drive(powerConstant,300);
-                sleep(sleepConstant);
+                auto.driveEncoders(powerConstant,200);
+                sleep(auto.sleepConstant);
 
-                // move arm out to drop wobble goal
-                moveExtensionArm(1,1500);
-                sleep(sleepConstant);
-
-                // lower wobble goal holding arm
-                ULTIMATE.armSwing.setPosition(1);
-                sleep(sleepConstant);
-
-                // unlatch wobble goal
-                ULTIMATE.latch.setPosition(0);
-                sleep(500);
-
-                // retract extension arm
-                moveExtensionArm(-1,1500);
-                sleep(sleepConstant);
-
-                // move holding arm back up
-                ULTIMATE.armSwing.setPosition(0);
-                sleep(sleepConstant);
+                // place wobble goal
+                auto.dropWobbleGoal();
 
                 // move back to get to our shooting spot
-                drive(-powerConstant,225);
-                sleep(sleepConstant);
+                auto.driveEncoders(-powerConstant,200);
+                sleep(auto.sleepConstant);
 
-                // finish program
+                // finish OpMode
                 rest();
                 break;
 
             case FOUR:
                 telemetry.addLine("four");
-
-                //initialize latch to hold wobble goal
-                ULTIMATE.latch.setPosition(1);
-                sleep(sleepConstant);
+                telemetry.update();
 
                 // drive straight until in front of C box
-                drive(powerConstant, 2100);
-                sleep(sleepConstant);
+                auto.driveTime(powerConstant, 2225);
+                sleep(auto.sleepConstant);
 
-                // move arm out to drop wobble goal
-                moveExtensionArm(1,1500);
-                sleep(sleepConstant);
-
-                // lower wobble goal holding arm
-                ULTIMATE.armSwing.setPosition(1);
-                sleep(sleepConstant);
-
-                // unlatch wobble goal
-                ULTIMATE.latch.setPosition(0);
-                sleep(200);
-
-                // retract extension arm
-                moveExtensionArm(-1, 1500);
-                sleep(sleepConstant);
-
-                // move holding arm back up
-                ULTIMATE.armSwing.setPosition(0);
-                sleep(sleepConstant);
-
-                // move back slightly as insurance that we'll clear wobble goal
-                drive(-powerConstant,100);
-                sleep(sleepConstant);
+                // place wobble goal
+                auto.dropWobbleGoal();
 
                 // move in front of tower goal
-                strafe(.6, 950);
-                sleep(sleepConstant);
+                auto.strafe(powerConstant, 950);
+                sleep(auto.sleepConstant);
 
                 // attempt to move to our shooting spot
-                drive(-powerConstant, 600);
-                sleep(sleepConstant);
+                auto.driveTime(-powerConstant, 600);
+                sleep(auto.sleepConstant);
 
-                // finish program
+                // finish OpMode
                 rest();
+                break;
 
             default:
-                telemetry.addLine("Problem with vision. Defaulting to A box");
+                telemetry.addLine("none");
+                telemetry.update();
 
-                //initialize latch to hold wobble goal
-                ULTIMATE.latch.setPosition(1);
-                sleep(sleepConstant);
 
                 // drive straight until in front of A box
-                drive(powerConstant, 1100);
-                sleep(sleepConstant);
+                auto.driveTime(powerConstant, 1500);
+                sleep(auto.sleepConstant);
 
-                // move arm out to drop wobble goal
-                moveExtensionArm(1,1500);
-                sleep(sleepConstant);
-
-                // lower wobble goal holding arm
-                ULTIMATE.armSwing.setPosition(1);
-                sleep(sleepConstant);
-
-                // unlatch wobble goal
-                ULTIMATE.latch.setPosition(0);
-                sleep(200);
-
-                // retract extension arm
-                moveExtensionArm(-1,1500);
-                sleep(sleepConstant);
-
-                // move holding arm back up
-                ULTIMATE.armSwing.setPosition(0);
-                sleep(sleepConstant);
-
-                // move back slightly as insurance that we'll clear wobble goal
-                drive(-powerConstant,100);
-                sleep(sleepConstant);
+                // place wobble goal
+                auto.dropWobbleGoal();
 
                 // move in front of tower goal
-                strafe(.6, 900);
-                sleep(sleepConstant);
+                auto.strafe(.6, 1150);
+                sleep(auto.sleepConstant);
 
                 // attempt to move to our shooting spot
-                drive(powerConstant, 275);
-                sleep(sleepConstant);
-        }
+                auto.driveTime(powerConstant, 155);
+                sleep(auto.sleepConstant);
 
-        // finish program
-        rest();
+                // finish OpMode
+                rest();
+        }
+        telemetry.clearAll();
+        telemetry.addLine("done");
+        telemetry.update();
     }
 
     private void drive (double power, int time){
@@ -244,10 +137,7 @@ public class motorEncoders extends LinearOpMode {
         ULTIMATE.rightF.setPower(power);
         ULTIMATE.rightB.setPower(power);
         sleep(time);
-        ULTIMATE.leftF.setPower(0);
-        ULTIMATE.leftB.setPower(0);
-        ULTIMATE.rightF.setPower(0);
-        ULTIMATE.rightB.setPower(0);
+        halt();
     }
 
     private void strafe (double power, int time){
@@ -256,6 +146,9 @@ public class motorEncoders extends LinearOpMode {
         ULTIMATE.rightF.setPower(-power);
         ULTIMATE.rightB.setPower(power);
         sleep(time);
+        halt();
+    }
+    private void halt(){
         ULTIMATE.leftF.setPower(0);
         ULTIMATE.leftB.setPower(0);
         ULTIMATE.rightF.setPower(0);
@@ -272,36 +165,30 @@ public class motorEncoders extends LinearOpMode {
     private void rest(){
 
         // turn flywheel on
-        ULTIMATE.shoot1.setPower(.6);
-        ULTIMATE.shoot2.setPower(.6);
+        ULTIMATE.shoot1.setPower(.64);
+        ULTIMATE.shoot2.setPower(.64);
 
         // move catchplate into shooting position
         ULTIMATE.catchPlate.setPosition(.85);
-        sleep(sleepConstant);
+        sleep(auto.sleepConstant);
 
         // move the trigger to shoot the preloaded rings three times
-        ULTIMATE.trigger.setPosition(.8);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(.0);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(.8);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(.0);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(.8);
-        sleep(1000);
-        ULTIMATE.trigger.setPosition(.0);
-        sleep(100);
+        for (int i = 0; i < 3; i++) {
+            ULTIMATE.trigger.setPosition(.8);
+            sleep(800);
+            ULTIMATE.trigger.setPosition(.0);
+            sleep(800);
+        }
 
         // park
-        drive(1, 150);
-        sleep(sleepConstant);
+        auto.driveEncoders(1, 150);
+        sleep(auto.sleepConstant);
 
         // turn motors off and put catchplate back to normal position
         ULTIMATE.shoot1.setPower(0);
         ULTIMATE.shoot2.setPower(0);
         ULTIMATE.catchPlate.setPosition(1);
-        sleep(sleepConstant);
+        sleep(auto.sleepConstant);
 
         // makes sure the program ends correctly
         stop();

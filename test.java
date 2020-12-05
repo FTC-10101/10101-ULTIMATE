@@ -7,21 +7,27 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Autonomous
 public class test extends LinearOpMode {
 
-    ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
-    AutonomousParent auto;
+    AutonomousParent auto  = new AutonomousParent(this);
+    ULTIMATEHardware ULTIMATE_AUTO = auto;
+
+
 
     public void runOpMode(){
 
-        ULTIMATE.init(hardwareMap,true);
 
-        auto  = new AutonomousParent(this);
+        auto.init();
+        ULTIMATE_AUTO.init(hardwareMap,true,true);
+
+
+
 
 
 
         waitForStart();
 
-        auto.driveEncoders(.3, 100);
-        sleep(500);
+        auto.driveEncoders(.3,3000);
+        telemetry.addLine("should have ran motor");
+        telemetry.update();
         stop();
 
     }

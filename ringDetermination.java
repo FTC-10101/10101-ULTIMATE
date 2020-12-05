@@ -20,7 +20,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
         static final Scalar BLUE = new Scalar(0, 0, 255);
         static final Scalar GREEN = new Scalar(0, 255, 0);
 
-      static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(230,220);
+      static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(260,80);
 
         static final int REGION_WIDTH = 120;
         static final int REGION_HEIGHT = 130;

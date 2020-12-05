@@ -19,9 +19,10 @@ public class moveWobbleGoal extends LinearOpMode {
         public void runOpMode() throws InterruptedException {
 
 
+            ULTIMATE.init(hardwareMap, false,true);
             ULTIMATE.Webcam1.setPipeline(vision);
 
-            ULTIMATE.init(hardwareMap, false);
+
 
             // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
             // out when the RC activity is in portrait. We do our actual image processing assuming
