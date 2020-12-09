@@ -8,6 +8,8 @@ public class Tele_2 extends OpMode {
     // Inherits hardware class
     private ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
 
+    double turnConstant = .85;
+    double triggerConstant = .2;
     boolean bToggle = false;
     boolean xWasPressed = false;
     boolean yWasPressed = false;
@@ -47,7 +49,7 @@ public class Tele_2 extends OpMode {
         double rotate;  // Power for rotating the robot
         drive = -gamepad1.left_stick_y;
         strafe = gamepad1.left_stick_x;
-        rotate = -gamepad1.right_stick_x;
+        rotate = -gamepad1.right_stick_x * turnConstant;
         double frontLeftPower = (drive) + strafe - (rotate);
         double backLeftPower = (drive) - strafe - (rotate);
         double frontRightPower = (drive) - strafe + (rotate);
@@ -56,7 +58,6 @@ public class Tele_2 extends OpMode {
         ULTIMATE.leftB.setPower(backLeftPower);
         ULTIMATE.rightF.setPower(frontRightPower);
         ULTIMATE.rightB.setPower(backRightPower);
-        telemetry.addData("armSwing position: ", ULTIMATE.armSwing.getPosition());
 
         // Below is an option for the primary driver to use the dpad to move for slower, more
         // precise movements
@@ -118,15 +119,20 @@ public class Tele_2 extends OpMode {
         }
         if (gamepad1.y) {
             if (!yWasPressed) {
-                ULTIMATE.lapBar.setPosition(1);
+                ULTIMATE.lapBar.setPosition(0);
                 yWasPressed = true;
                 sleep(sleepConstant);
             } else {
-                ULTIMATE.lapBar.setPosition(0);
+                ULTIMATE.lapBar.setPosition(1);
                 yWasPressed = false;
                 sleep(sleepConstant);
             }
         }
+
+        //ULTIMATE.leftF.setPower(gamepad1.left_trigger * triggerConstant);
+        //ULTIMATE.leftB.setPower(gamepad1.left_trigger * triggerConstant);
+        //ULTIMATE.rightF.setPower(gamepad1.right_trigger * triggerConstant);
+        //ULTIMATE.rightB.setPower(gamepad1.right_trigger * triggerConstant);
 
 
         //----------------- Accessory driver's controls --------------------------------------------

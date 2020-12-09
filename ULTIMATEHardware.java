@@ -48,6 +48,7 @@ public class ULTIMATEHardware {
 
         imu = ulthw.get(BNO055IMU.class, "imu");
 
+        // Don't create camera object if not using in a particular instance
         if(camera) {
             int cameraMonitorViewId = ulthw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", ulthw.appContext.getPackageName());
             Webcam1 = OpenCvCameraFactory.getInstance().createWebcam(ulthw.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -61,17 +62,24 @@ public class ULTIMATEHardware {
         leftF.setDirection(DcMotor.Direction.REVERSE);
         leftB.setDirection(DcMotor.Direction.REVERSE);
 
+        // Don't use encoders if not using in a particular instance
         if (encoders) {
             rightB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         else {
             rightB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            leftB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
-        leftF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //leftB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // Use encoders on flywheel to access built in PID
+        //shoot1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //shoot2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
     }
 }

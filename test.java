@@ -16,7 +16,7 @@ public class test extends LinearOpMode {
 
 
         auto.init();
-        ULTIMATE_AUTO.init(hardwareMap,true,true);
+        ULTIMATE_AUTO.init(hardwareMap,true,false);
 
 
 
@@ -25,7 +25,7 @@ public class test extends LinearOpMode {
 
         waitForStart();
 
-        auto.driveEncoders(.3,3000);
+        auto.strafeEncoders(.3,3000);
         telemetry.addLine("should have ran motor");
         telemetry.update();
         stop();
