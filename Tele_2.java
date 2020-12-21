@@ -8,6 +8,7 @@ public class Tele_2 extends OpMode {
     // Inherits hardware class
     private ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
 
+    int test = 1;
     double driveConstant = .8;
     boolean bToggle = false;
     boolean xWasPressed = false;
