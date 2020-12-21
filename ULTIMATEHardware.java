@@ -1,26 +1,31 @@
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
-
+@TeleOp
 public class ULTIMATEHardware {
 
     // Hardware Map. Android Studio says this line is unnecessary, but it is in every hardware class
     // we have made before. Eventually I will test it to see what's up, but for now, I don't
     // understand this line. Need to ask Jacob or Zade
-    HardwareMap ulthw;
 
     // DC motors
     public DcMotor leftF, leftB, rightF, rightB, // drive motors
-            shoot1, shoot2, intake, // intake and shooter motors
+            shoot1, shoot2, intake, // intake motor
             extensionArm; // arm for wobble goal
 
+
+
     // Servos
-    public Servo catchPlate, trigger, deflector, armSwing, latch, lapBar;
+    public Servo catchPlate, trigger, deflector, armSwing, latch, lapBar, rearLatch;
 
     // Inertial Measuring Unit
     public BNO055IMU imu;
@@ -28,7 +33,9 @@ public class ULTIMATEHardware {
     // External Webcam
     OpenCvCamera Webcam1;
 
-    public void init (HardwareMap ulthw, boolean encoders, boolean camera) {
+    double globalAngle = 0;
+
+    public void init(HardwareMap ulthw, boolean encoders, boolean camera) {
 
         leftB = ulthw.dcMotor.get("leftB");
         rightB = ulthw.dcMotor.get("rightB");
@@ -45,6 +52,7 @@ public class ULTIMATEHardware {
         armSwing = ulthw.servo.get("armSwing");
         latch = ulthw.servo.get("latch");
         lapBar = ulthw.servo.get("lapBar");
+        rearLatch = ulthw.servo.get("rearLatch");
 
         imu = ulthw.get(BNO055IMU.class, "imu");
 
@@ -66,7 +74,7 @@ public class ULTIMATEHardware {
         if (encoders) {
             rightB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         else {
@@ -77,8 +85,8 @@ public class ULTIMATEHardware {
         }
 
         // Use encoders on flywheel to access built in PID
-        //shoot1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //shoot2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shoot1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shoot2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
     }

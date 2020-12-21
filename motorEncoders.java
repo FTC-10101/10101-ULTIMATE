@@ -20,8 +20,6 @@ public class motorEncoders extends LinearOpMode {
         ULTIMATE.init(hardwareMap,true,true);
         ULTIMATE.Webcam1.setPipeline(vision);
 
-
-
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
         // out when the RC activity is in portrait. We do our actual image processing assuming
         // landscape orientation, though.
@@ -53,33 +51,34 @@ public class motorEncoders extends LinearOpMode {
                 telemetry.addLine("one");
                 telemetry.update();
 
-                // drive straight until in front of A box
-                auto.driveEncoders(.65, 2250);
+                /*
+                // drive straight until close to B box
+                auto.driveEncoders(.65, 3300);
                 sleep(auto.sleepConstant);
 
                 // strafe right to get in front of B box
-                auto.strafeEncoders(powerConstant,1100);
+                auto.strafeEncoders(.5,900);
                 sleep(auto.sleepConstant);
 
-                // move forward closer to B box
-                auto.driveEncoders(powerConstant,900);
-                sleep(200);
 
                 // place wobble goal
                 dropWobbleGoal();
 
                 // move back to get to our shooting spot
-                auto.driveEncoders(.45,-850);
+                auto.driveEncoders(powerConstant,-600);
                 sleep(auto.sleepConstant);
 
-                // finish OpMode
+                // strafe to line up with shooting spot
+                auto.strafeEncoders(.5,175);
+
+                // shoot preloaded rings
                 shoot();
 
                 // strafe to move in front of wobble goal
                 auto.strafeEncoders(.45,450);
 
                 // move back to second wobble goal
-                auto.driveEncoders(powerConstant,-1200);
+                auto.driveEncoders(powerConstant,-1375);
                 sleep(300);
 
                 // move wobble goal holder down
@@ -91,19 +90,103 @@ public class motorEncoders extends LinearOpMode {
                 auto.driveEncoders(powerConstant,2600);
                 sleep(200);
 
+                // turn so wobble goal is in box
                 auto.turn(-.5,1200);
                 sleep(200);
 
-                auto.driveEncoders(.3,-300);
+                // move wobble goal back into B box
+                auto.driveEncoders(.3,-150);
                 sleep(200);
 
+                // let go of wobble goal
                 auto.lapBar.setPosition(1);
                 sleep(500);
 
+                // drive forward to get away from wobble goal and park
                 auto.driveEncoders(1,750);
                 sleep(200);
 
-                auto.strafeEncoders(1,1000);
+
+                 */
+
+                // drive straight until close to B box
+                auto.driveEncoders(.65, 3200);
+                sleep(auto.sleepConstant);
+
+                // strafe right to get in front of B box
+                auto.strafeEncoders(.5,900);
+                sleep(auto.sleepConstant);
+
+
+                // place wobble goal
+                dropWobbleGoal();
+
+                // move back to get to our shooting spot
+                auto.driveEncoders(powerConstant,-725);
+                sleep(auto.sleepConstant);
+
+                // strafe to line up with shooting spot
+                auto.strafeEncoders(.5,300);
+
+                // shoot preloaded rings
+                shoot();
+
+                // strafe to move in front of wobble goal
+                auto.strafeEncoders(.45,325);
+
+                // move back to second wobble goal
+                auto.driveEncoders(powerConstant,-1305);
+                sleep(300);
+
+                // move wobble goal holder down
+                ULTIMATE.lapBar.setPosition(1);
+                sleep(800);
+
+                // turn on intake and shoot wheel and strafe in front of vision ring
+                ULTIMATE.intake.setPower(1);
+                ULTIMATE.shoot1.setPower(.65);
+                ULTIMATE.shoot2.setPower(.65);
+                auto.strafeEncoders(.5, -500);
+                sleep(200);
+
+                // drive forward to shooting spot and hopefully pick up ring
+                auto.driveEncoders(.8,1100);
+                sleep(200);
+
+                // strafe to shooting spot
+                auto.strafeEncoders(.3,300);
+                sleep(1000);
+
+                // shoot ring
+                ULTIMATE.catchPlate.setPosition(.855);
+                sleep(700);
+                ULTIMATE.trigger.setPosition(.7);
+                sleep(200);
+                ULTIMATE.trigger.setPosition(0);
+
+                // turn motors we're not using off
+                ULTIMATE.intake.setPower(0);
+                ULTIMATE.shoot1.setPower(0);
+                ULTIMATE.shoot2.setPower(0);
+
+                // move forward to get in front of B box
+                auto.driveEncoders(powerConstant,600);
+                sleep(200);
+
+                // turn into B box
+                auto.turn(.6,1500);
+                sleep(200);
+
+                // back into B box
+                auto.driveEncoders(.5,-850);
+                sleep(200);
+
+                // let go of wobble goal
+                ULTIMATE.lapBar.setPosition(0);
+                sleep(400);
+
+                auto.driveEncoders(1,300);
+
                 break;
 
             case FOUR:
@@ -118,25 +201,25 @@ public class motorEncoders extends LinearOpMode {
                 dropWobbleGoal();
 
                 // move in front of tower goal
-                auto.strafeEncoders(.5, 1100);
+                auto.strafeEncoders(.5, 1200);
                 sleep(auto.sleepConstant);
 
                 // attempt to move to our shooting spot
-                auto.driveEncoders(.5, -1600);
+                auto.driveEncoders(.5, -1575);
                 sleep(auto.sleepConstant);
 
                 // finish OpMode
                 shoot();
 
                 // strafe to move in front of wobble goal
-                auto.strafeEncoders(.5,450);
+                auto.strafeEncoders(.5,375);
 
                 // move back to second wobble goal
-                auto.driveEncoders(powerConstant,-1300);
+                auto.driveEncoders(powerConstant,-1375);
                 sleep(200);
 
                 // move wobble goal holder down
-                ULTIMATE.lapBar.setPosition(0);
+                ULTIMATE.lapBar.setPosition(1);
                 sleep(1000);
 
                 // drive to C box
@@ -148,15 +231,15 @@ public class motorEncoders extends LinearOpMode {
                 sleep(200);
 
                 // move back into C box
-                auto.driveEncoders(1,-850);
+                auto.driveEncoders(1,-1000);
                 sleep(200);
 
                 // let go of wobble goal
-                ULTIMATE.lapBar.setPosition(1);
+                ULTIMATE.lapBar.setPosition(0);
                 sleep(500);
 
                 // pull forward to make sure we let go of wobble goal
-                auto.driveEncoders(1,400);
+                auto.driveEncoders(1,550);
                 sleep(200);
 
                 // park
@@ -168,14 +251,14 @@ public class motorEncoders extends LinearOpMode {
                 telemetry.update();
 
                 // drive straight until in front of A box
-                auto.driveEncoders(powerConstant, 2250);
+                auto.driveEncoders(.7, 2100);
                 sleep(auto.sleepConstant);
 
                 // place wobble goal
                 dropWobbleGoal();
 
                 // move in front of tower goal
-                auto.strafeEncoders(.5, 1050);
+                auto.strafeEncoders(.5, 1250);
                 sleep(auto.sleepConstant);
 
                 // attempt to move to our shooting spot
@@ -186,22 +269,22 @@ public class motorEncoders extends LinearOpMode {
                 shoot();
 
                 // strafe to move in front of wobble goal
-                auto.strafeEncoders(.5,400);
+                auto.strafeEncoders(.5,315);
 
                 // move back to second wobble goal
-                auto.driveEncoders(powerConstant,-1350);
+                auto.driveEncoders(powerConstant,-1250);
                 sleep(1000);
 
                 // move wobble goal holder down
-                ULTIMATE.lapBar.setPosition(0);
+                ULTIMATE.lapBar.setPosition(1);
                 sleep(1000);
 
                 // drive to A box
-                auto.driveEncoders(powerConstant,2225);
+                auto.driveEncoders(powerConstant,1900);
                 sleep(200);
 
                 // turn to move wobble goal in
-                auto.turn(-.3,1400);
+                auto.turn(-.3,1350);
                 sleep(200);
 
                 // move back into A box
@@ -209,17 +292,17 @@ public class motorEncoders extends LinearOpMode {
                 sleep(200);
 
                 // let go of wobble goal
-                ULTIMATE.lapBar.setPosition(1);
+                ULTIMATE.lapBar.setPosition(0);
                 sleep(500);
 
                 // pull forward to make sure we let go of wobble goal
-                auto.driveEncoders(1,600);
+                auto.driveEncoders(1,900);
 
         }
-        stop();
         telemetry.clearAll();
         telemetry.addLine("done");
         telemetry.update();
+        stop();
     }
 
     public void dropWobbleGoal(){
@@ -249,8 +332,8 @@ public class motorEncoders extends LinearOpMode {
        sleep(500);
 
         // turn flywheel on
-        ULTIMATE.shoot1.setPower(.67);
-        ULTIMATE.shoot2.setPower(.67);
+        ULTIMATE.shoot1.setPower(.65);
+        ULTIMATE.shoot2.setPower(.65);
 
     }
 
@@ -258,7 +341,7 @@ public class motorEncoders extends LinearOpMode {
 
         // move the trigger to shoot the preloaded rings three times
         for (int i = 0; i < 3; i++) {
-            ULTIMATE.trigger.setPosition(.8);
+            ULTIMATE.trigger.setPosition(.7);
             sleep(900);
             ULTIMATE.trigger.setPosition(.0);
             sleep(900);

@@ -1,9 +1,10 @@
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
 //@Disabled
-public class Tele_2 extends OpMode {
+public class TeleLinear extends LinearOpMode {
 
     // Inherits hardware class
     private ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
@@ -22,27 +23,19 @@ public class Tele_2 extends OpMode {
     int sleepConstant = 200;
 
 
-    // This is the same sleep method that is used in autonomous programs. It is used
-    // for delays in the main loop to prevent the program from thinking a button was pressed
-    // multiple times
-    public void sleep(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
 
-    public void init() {
+
+
+    @Override
+    public void runOpMode() throws InterruptedException {
         // Initializes hardware map for the control hub
         ULTIMATE.init(hardwareMap,false,false);
 
         // Makes sure servos are in the right position
         ULTIMATE.armSwing.setPosition(.35);
         ULTIMATE.catchPlate.setPosition(1);
-    }
 
-    public void loop() {
+        waitForStart();
         // --------------------------------Primary driver's controls--------------------------------
         // Driving
         double drive;   // Power for forward and back motion
@@ -223,6 +216,9 @@ public class Tele_2 extends OpMode {
         ULTIMATE.extensionArm.setPower(gamepad2.left_stick_x);
 
     }
+    }
 
 
-}
+
+
+

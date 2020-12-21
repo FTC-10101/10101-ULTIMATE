@@ -1,32 +1,24 @@
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+public class InertialMeasuringUnit extends ULTIMATEHardware {
 
-// class for testing minor changes
-@Autonomous
-public class test extends LinearOpMode {
-
-    AutonomousParent auto  = new AutonomousParent(this);
-    ULTIMATEHardware ULTIMATE_AUTO = auto;
-    BNO055IMU imu;
     Orientation lastAngles = new Orientation();
 
+    private final LinearOpMode lOpMode;
 
+    public double globalAngle;
 
-    public void runOpMode(){
+    public InertialMeasuringUnit (LinearOpMode lom){
+        this.lOpMode = lom;
+    }
 
-
-        auto.init();
-        ULTIMATE_AUTO.init(hardwareMap,true,false);
-
-        //All the required parameters for IMU
+    public void init_IMU(){
         BNO055IMU.Parameters imuparameters = new BNO055IMU.Parameters();
 
         imuparameters.mode = BNO055IMU.SensorMode.IMU;
@@ -34,47 +26,14 @@ public class test extends LinearOpMode {
         imuparameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         imuparameters.loggingEnabled = false;
 
-        //Finds the BNO055IMU class and gets its information
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-
-        //Initializes IMU Parameters
         imu.initialize(imuparameters);
-
-        while (!isStopRequested() && !imu.isGyroCalibrated())
-        {
-            sleep(50);
-            idle();
-        }
-
-        telemetry.addData("Mode", "waiting for start");
-        telemetry.update();
-
-
-
-
-
-
-
-
-        waitForStart();
-
-        auto.turnEncoders(1,1000);
-        sleep(8000);
-        auto.turnEncoders(1,1000);
-        sleep(8000);
-        auto.turnEncoders(1,1000);
-        sleep(8000);
-
-
-        stop();
-
     }
 
     private void resetAngle()
     {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YZX, AngleUnit.DEGREES);
 
-        ULTIMATE_AUTO.globalAngle = 0;
+        globalAngle = 0;
     }
 
     /**
@@ -100,11 +59,11 @@ public class test extends LinearOpMode {
         else if (deltaAngle > 180)
             deltaAngle -= 360;
 
-        ULTIMATE_AUTO.globalAngle += deltaAngle;
+        globalAngle += deltaAngle;
 
         lastAngles = angles;
 
-        return -ULTIMATE_AUTO.globalAngle;
+        return globalAngle;
     }
 
 
@@ -154,37 +113,35 @@ public class test extends LinearOpMode {
         } else
             return;
         // set power to rotate.
-        ULTIMATE_AUTO.leftF.setPower(leftPower);
-        ULTIMATE_AUTO.leftB.setPower(leftPower);
-        ULTIMATE_AUTO.rightF.setPower(rightPower);
-        ULTIMATE_AUTO.rightB.setPower(rightPower);
+        leftF.setPower(leftPower);
+        leftB.setPower(leftPower);
+        rightF.setPower(rightPower);
+        rightB.setPower(rightPower);
 
         // rotate until turn is completed.
         if (degrees < 0) {
             // On right turn we have to get off zero first.
-            while (opModeIsActive() && getAngle() == 0) {
-                telemetry.addData("Angle", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,AngleUnit.DEGREES));
-                telemetry.addData("angle",getAngle());
-                telemetry.update();
+            while (lOpMode.opModeIsActive() && getAngle() == 0) {
+                lOpMode.telemetry.addData("Angle", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,AngleUnit.DEGREES));
+                lOpMode.telemetry.update();
             }
-            while (opModeIsActive() && getAngle() > degrees) {
-                telemetry.addData("Angle", imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES));
-                telemetry.addData("angle",getAngle());
-                telemetry.update();
+            while (lOpMode.opModeIsActive() && getAngle() > degrees) {
+                lOpMode.telemetry.addData("Angle", imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES));
+                lOpMode.telemetry.update();
             }
         } else    // left turn.
-            while (opModeIsActive() && getAngle() < degrees) {
-                telemetry.addData("Angle", imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX, AngleUnit.DEGREES));
-                telemetry.addData("angle",getAngle());
-                telemetry.update();
+            while (lOpMode.opModeIsActive() && getAngle() < degrees) {
+                lOpMode.telemetry.addData("Angle", imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES));
+                lOpMode.telemetry.update();
             }
         // turn the motors off.
-        auto.halt();
+        leftF.setPower(0);
+        leftB.setPower(0);
+        rightF.setPower(0);
+        rightB.setPower(0);
         // wait for rotation to stop.
-        sleep(1000);
+        lOpMode.sleep(1000);
         // reset angle for new heading
         resetAngle();
     }
-
-
 }
