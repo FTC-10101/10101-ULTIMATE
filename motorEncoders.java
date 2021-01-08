@@ -144,8 +144,8 @@ public class motorEncoders extends LinearOpMode {
 
                 // turn on intake and shoot wheel and strafe in front of vision ring
                 ULTIMATE.intake.setPower(1);
-                ULTIMATE.shoot1.setPower(.65);
-                ULTIMATE.shoot2.setPower(.65);
+                ULTIMATE.shoot1.setVelocity(1500);
+                ULTIMATE.shoot2.setVelocity(1500);
                 auto.strafeEncoders(.5, -500);
                 sleep(200);
 
@@ -166,8 +166,8 @@ public class motorEncoders extends LinearOpMode {
 
                 // turn motors we're not using off
                 ULTIMATE.intake.setPower(0);
-                ULTIMATE.shoot1.setPower(0);
-                ULTIMATE.shoot2.setPower(0);
+                ULTIMATE.shoot1.setVelocity(0);
+                ULTIMATE.shoot2.setVelocity(0);
 
                 // move forward to get in front of B box
                 auto.driveEncoders(powerConstant,600);
@@ -332,8 +332,8 @@ public class motorEncoders extends LinearOpMode {
        sleep(500);
 
         // turn flywheel on
-        ULTIMATE.shoot1.setPower(.65);
-        ULTIMATE.shoot2.setPower(.65);
+        ULTIMATE.shoot1.setVelocity(1500);
+        ULTIMATE.shoot2.setVelocity(1500);
 
     }
 
@@ -348,8 +348,8 @@ public class motorEncoders extends LinearOpMode {
         }
 
         // turn motors off and put catchplate back to normal position
-        ULTIMATE.shoot1.setPower(0);
-        ULTIMATE.shoot2.setPower(0);
+        ULTIMATE.shoot1.setVelocity(0);
+        ULTIMATE.shoot2.setVelocity(0);
         ULTIMATE.catchPlate.setPosition(1);
         sleep(auto.sleepConstant);
 

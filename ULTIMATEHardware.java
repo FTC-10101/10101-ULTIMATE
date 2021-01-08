@@ -13,14 +13,14 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 @TeleOp
 public class ULTIMATEHardware {
 
-    // Hardware Map. Android Studio says this line is unnecessary, but it is in every hardware class
-    // we have made before. Eventually I will test it to see what's up, but for now, I don't
-    // understand this line. Need to ask Jacob or Zade
+
 
     // DC motors
     public DcMotor leftF, leftB, rightF, rightB, // drive motors
-            shoot1, shoot2, intake, // intake motor
+             intake, // intake motor
             extensionArm; // arm for wobble goal
+
+    public DcMotorEx shoot1, shoot2;
 
 
 
@@ -41,8 +41,8 @@ public class ULTIMATEHardware {
         rightB = ulthw.dcMotor.get("rightB");
         rightF = ulthw.dcMotor.get("rightF");
         leftF = ulthw.dcMotor.get("leftF");
-        shoot1 = ulthw.dcMotor.get("shoot1");
-        shoot2 = ulthw.dcMotor.get("shoot2");
+        shoot1 = ulthw.get(DcMotorEx.class, "shoot1");
+        shoot2 = ulthw.get(DcMotorEx.class, "shoot2");
         intake = ulthw.dcMotor.get("intake");
         extensionArm = ulthw.dcMotor.get("extensionArm");
 

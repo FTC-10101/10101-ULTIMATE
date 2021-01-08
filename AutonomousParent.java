@@ -32,6 +32,12 @@ public class AutonomousParent extends ULTIMATEHardware {
         rightF.setPower(power);
         rightB.setPower(power);
     }
+    public void drive(double lBPower, double lFPower, double rBPower, double rFPower) {
+        leftF.setPower(lFPower);
+        leftB.setPower(lBPower);
+        rightF.setPower(rBPower);
+        rightB.setPower(rFPower);
+    }
 
     public void driveTime(double power, int time) {
         drive(power);
@@ -102,6 +108,64 @@ public class AutonomousParent extends ULTIMATEHardware {
             lOpMode.telemetry.update();
         }
 
+        halt();
+        lOpMode.telemetry.clearAll();
+
+        rightB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public void driveEncoders(double startPower, double endPower, int distance) {
+        rightB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+        rightB.setTargetPosition(distance);
+        leftB.setTargetPosition(distance);
+        rightF.setTargetPosition(distance);
+        leftF.setTargetPosition(distance);
+
+
+
+
+        rightB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightF.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftF.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        drive(startPower);
+
+
+        while (rightB.isBusy() && leftB.isBusy() && rightF.isBusy() && leftF.isBusy()) {
+            lOpMode.telemetry.addLine("busy");
+
+
+            double tickMultiplier_LF =  1- (double) Math.pow((leftF.getTargetPosition() - leftF.getCurrentPosition()) / leftF.getTargetPosition(), 3);
+            double tickMultiplier_LB = 1- (double) Math.pow((leftB.getTargetPosition() - leftB.getCurrentPosition()) / leftB.getTargetPosition(), 3);
+            double tickMultiplier_RF = 1- (double) Math.pow((rightF.getTargetPosition() - rightF.getCurrentPosition()) / rightF.getTargetPosition(), 3);
+            double tickMultiplier_RB = 1- (double) Math.pow((rightB.getTargetPosition() - rightB.getCurrentPosition()) / rightB.getTargetPosition(), 3);
+
+
+
+            double power_LF = tickMultiplier_LF * (endPower-startPower) + startPower;
+            double power_LB = tickMultiplier_LB * (endPower-startPower) + startPower;
+            double power_RF = tickMultiplier_RF * (endPower-startPower) + startPower;
+            double power_RB = tickMultiplier_RB * (endPower-startPower) + startPower;
+
+            lOpMode.telemetry.addData("tickMult", tickMultiplier_LF);
+            lOpMode.telemetry.addData("power", power_LF);
+            lOpMode.telemetry.addData("currPosition", leftF.getCurrentPosition());
+            lOpMode.telemetry.addData("tarPosition", leftF.getTargetPosition());
+            lOpMode.telemetry.update();
+
+
+            drive(power_LB, power_LF, power_RB, power_RF);
+
+
+        }
 
         halt();
         lOpMode.telemetry.clearAll();
