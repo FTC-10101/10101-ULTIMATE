@@ -1,252 +1,306 @@
+/*The class that runs for the tele-op period. For more detail, see our engineering portfolio or the
+programming section of our engineering notebook */
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 @TeleOp
-//@Disabled
+// LinearOpMode to more cleanly access Thread.sleep, and because it's simpler and saves lines
 public class TeleLinear extends LinearOpMode {
 
-    // Inherits hardware class
-    private ULTIMATEHardware ULTIMATE = new ULTIMATEHardware();
-    ElapsedTime timer = new ElapsedTime();
+    ElapsedTime mainTimer = new ElapsedTime();
+    ElapsedTime lapBarTimer = new ElapsedTime();
+    ElapsedTime intakeTimer = new ElapsedTime();
+    ElapsedTime deflectorTimer = new ElapsedTime();
+    ElapsedTime shootTimer = new ElapsedTime();
+    ElapsedTime catchplateTimer = new ElapsedTime();
+    ElapsedTime armSwingTimer = new ElapsedTime();
+    ElapsedTime latchTimer = new ElapsedTime();
+    ElapsedTime incrementUpTimer = new ElapsedTime();
+    ElapsedTime incrementDownTimer = new ElapsedTime();
+    ElapsedTime rsButtonTimer = new ElapsedTime();
+    ElapsedTime sideBarTimer = new ElapsedTime();
+    ElapsedTime ring3Timer = new ElapsedTime();
 
-    double driveConstant = .8;
-    boolean bToggle = false;
-    boolean xWasPressed = false;
-    boolean yWasPressed = false;
-    boolean rbWasPressed = false;
-    boolean lsButtonWasPressed = false;
-    boolean gPad2_AToggle = false;
-    boolean gPad2_BWasPressed = false;
-    boolean gPad2_yWasPressed = false;
-    boolean gPad2_xWasPressed = false;
-    int reverse;
+    // These are for our "button logic" that turns our buttons into on/off switches
+    private boolean bToggle = false;
+    private boolean xWasPressed = false;
+    private boolean yWasPressed = false;
+    private boolean gPad2_AToggle = false;
+    private boolean gPad2_BWasPressed = false;
+    private boolean gPad2_yWasPressed = false;
+    private boolean gPad2_xWasPressed = false;
+    private boolean rsButtonWasPressed = false;
+    private boolean rightBumperWasPressed = false;
+    private boolean ringToggle = false;
 
-    int sleepConstant = 200;
-    double slowMode = 1;
-
-
-
-
+    // Some tele-op exclusive variables, explanations commented in their implementations below
+    private int reverse = 1;
+    private int shootSubtractor = 0;
+    private int targetVelocity = 0;
+    private int velocityIncrement = 0;
+    private double slowMode = 1;
+    private int counter = 0;
 
     @Override
-    public void runOpMode() throws InterruptedException {
-        // Initializes hardware map for the control hub
-        ULTIMATE.init(hardwareMap,false,false);
+    public void runOpMode(){
+        /* Initializes hardware map for the control hub by inheriting our hardware class and running
+        its constructor */
+        ULTIMATEHardware ULTIMATE = new ULTIMATEHardware(hardwareMap);
+        int timerConstant = 350;
 
-        // Makes sure servos are in the right position
-        ULTIMATE.armSwing.setPosition(.35);
-        ULTIMATE.catchPlate.setPosition(1);
+        // Initialize some servos
+        ULTIMATE.armSwing.setPosition(ULTIMATE.ARMSWING_upPosition);
+        ULTIMATE.deflector.setPosition(ULTIMATE.DEFLECTOR_normalPosition);
 
-        waitForStart();
-        timer.reset();
+        waitForStart(); // Above happens in init, below after the start button is pressed
+        mainTimer.reset();
         while(opModeIsActive()) {
 
 
-            telemetry.addData("Time: ", (int) timer.seconds());
-            telemetry.addData("slowMode",slowMode);
-            telemetry.addData("catchplate position", ULTIMATE.catchPlate.getPosition());
+            // Some telemetry used for debugging and to make sure everything is working as intended
+
+            /*telemetry.addData("slowMode: ", slowMode < 1.0 ? "on" : "off");
+            telemetry.addData("avg shoot vel: ", (ULTIMATE.shoot1.getVelocity()
+                    + ULTIMATE.shoot2.getVelocity()) / 2);
+            telemetry.addData("target vel:  ", targetVelocity);*/
+            telemetry.addData("target vel: ", targetVelocity);
+            telemetry.addData("time: ", (int) mainTimer.seconds());
             telemetry.update();
-            // --------------------------------Primary driver's controls--------------------------------
-            // Driving
-            double drive;   // Power for forward and back motion
-            double strafe;  // Power for left and right motion
-            double rotate;  // Power for rotating the robot
-            drive = -gamepad1.left_stick_y * driveConstant;
-            strafe = gamepad1.left_stick_x * driveConstant;
-            rotate = -gamepad1.right_stick_x * driveConstant;
-            double frontLeftPower = (drive) + strafe - (rotate);
-            double backLeftPower = (drive) - strafe - (rotate);
-            double frontRightPower = (drive) - strafe + (rotate);
-            double backRightPower = (drive) + strafe + (rotate);
-            ULTIMATE.leftF.setPower(frontLeftPower * slowMode);
-            ULTIMATE.leftB.setPower(backLeftPower * slowMode);
-            ULTIMATE.rightF.setPower(frontRightPower * slowMode);
-            ULTIMATE.rightB.setPower(backRightPower * slowMode);
 
-            if(((int) timer.seconds() == 5)){
-                ULTIMATE.deflector.setPosition(1);
-            }
+            // --------------------------------Primary driver's controls----------------------------
 
-            // Below is an option for the primary driver to use the dpad to move for slower, more
-            // precise movements
-            if (gamepad1.dpad_up) {
-                ULTIMATE.leftF.setPower(.4);
-                ULTIMATE.leftB.setPower(.4);
-                ULTIMATE.rightF.setPower(.4);
-                ULTIMATE.rightB.setPower(.4);
-            }
-            if (gamepad1.dpad_down) {
-                ULTIMATE.leftF.setPower(-.4);
-                ULTIMATE.leftB.setPower(-.4);
-                ULTIMATE.rightF.setPower(-.4);
-                ULTIMATE.rightB.setPower(-.4);
-            }
-            if (gamepad1.dpad_right) {
-                ULTIMATE.leftF.setPower(.4);
-                ULTIMATE.leftB.setPower(-.4);
-                ULTIMATE.rightF.setPower(-.4);
-                ULTIMATE.rightB.setPower(.4);
-            }
-            if (gamepad1.dpad_left) {
-                ULTIMATE.leftF.setPower(-.4);
-                ULTIMATE.leftB.setPower(.4);
-                ULTIMATE.rightF.setPower(.4);
-                ULTIMATE.rightB.setPower(-.4);
+
+            // Uses the dimensional values of the left and right sticks for our mecanum drive
+            double wheelPower = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+            double stickAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x);
+
+            stickAngle -= Math.PI / 4;
+            double leftFrontPower = wheelPower * Math.cos(stickAngle) + gamepad1.right_stick_x;
+            double leftBackPower = wheelPower * Math.sin(stickAngle) + gamepad1.right_stick_x;
+            double rightFrontPower = wheelPower * Math.sin(stickAngle) - gamepad1.right_stick_x;
+            double rightBackPower = wheelPower * Math.cos(stickAngle) - gamepad1.right_stick_x;
+            ULTIMATE.leftF.setPower(leftFrontPower * slowMode);
+            ULTIMATE.leftB.setPower(leftBackPower * slowMode);
+            ULTIMATE.rightF.setPower(rightFrontPower * slowMode);
+            ULTIMATE.rightB.setPower(rightBackPower * slowMode);
+
+            // Automatically sets up for endgame at 100 seconds
+            if(((int) mainTimer.seconds() == 100)){
+                shootSubtractor = ULTIMATE.shootSubtractorVal;
+                ULTIMATE.deflector.setPosition(ULTIMATE.DEFLECTOR_powerShotPosition);
+                xWasPressed = true;
             }
 
-            // move the intake dc motor
-            if (gamepad1.b) {
+            // moves servo that pushes ring from catchplate to shooting wheel
+            ULTIMATE.trigger.setPosition(ULTIMATE.TRIGGER_shootPosition * gamepad1.right_trigger);
+
+            // moves the intake DC motors
+            if (gamepad1.b && intakeTimer.milliseconds() > timerConstant) {
                 bToggle = !bToggle;
-                sleep(sleepConstant);
+                intakeTimer.reset();
             }
 
             if (bToggle) {
-                ULTIMATE.intake.setPower(reverse);
+                ULTIMATE.intake1.setPower(reverse);
+                ULTIMATE.intake2.setPower(-reverse);
             } else {
-                ULTIMATE.intake.setPower(0);
+                ULTIMATE.intake1.setPower(0);
+                ULTIMATE.intake2.setPower(0);
             }
 
-            // move the "trigger"
-            if (gamepad1.a) {
-                ULTIMATE.trigger.setPosition(.8);
-            } else {
-                ULTIMATE.trigger.setPosition(0);
-            }
-
-            // move the "deflector"
-            if (gamepad1.x) {
+            // moves the deflector
+            if (gamepad1.x && deflectorTimer.milliseconds() > timerConstant) {
                 if (!xWasPressed) {
-                    ULTIMATE.deflector.setPosition(0);
+                    ULTIMATE.deflector.setPosition(ULTIMATE.DEFLECTOR_powerShotPosition);
+                    shootSubtractor = ULTIMATE.shootSubtractorVal;
                     xWasPressed = true;
-                    sleep(sleepConstant);
                 } else {
-                    ULTIMATE.deflector.setPosition(1);
+                    ULTIMATE.deflector.setPosition(ULTIMATE.DEFLECTOR_normalPosition);
+                    shootSubtractor = 0;
                     xWasPressed = false;
-                    sleep(sleepConstant);
                 }
-            }
-            if (gamepad1.y) {
-                if (!yWasPressed) {
-                    ULTIMATE.lapBar.setPosition(0);
-                    yWasPressed = true;
-                    sleep(sleepConstant);
-                } else {
-                    ULTIMATE.lapBar.setPosition(1);
-                    yWasPressed = false;
-                    sleep(sleepConstant);
-                }
-            }
-            if (gamepad1.right_bumper) {
-                if (!rbWasPressed) {
-                    ULTIMATE.lapBar.setPosition(.1);
-                    yWasPressed = true;
-                    sleep(sleepConstant);
-                } else {
-                    ULTIMATE.lapBar.setPosition(.5);
-                    rbWasPressed = false;
-                    sleep(sleepConstant);
-                }
+                deflectorTimer.reset();
             }
 
+            // moves the lap bar
+            if (gamepad1.y && lapBarTimer.milliseconds() > timerConstant) {
+                if (!yWasPressed) {
+                    ULTIMATE.lapBar.setPosition(ULTIMATE.LAPBAR_grabPosition);
+                    yWasPressed = true;
+
+                } else {
+                    ULTIMATE.lapBar.setPosition(ULTIMATE.LAPBAR_releasePosition);
+                    yWasPressed = false;
+                    sleep(timerConstant);
+                }
+                lapBarTimer.reset();
+            }
+
+            // reverses the intake motors if left bumper is held down and b toggle is true
             if (gamepad1.left_bumper) {
                 reverse = -1;
-            } else {
+            }
+            else{
                 reverse = 1;
             }
-            if(gamepad1.left_stick_button){
-                if(!lsButtonWasPressed){
-                    slowMode = .35;
-                    lsButtonWasPressed = true;
+
+            // activates slow mode on the drive motors if left trigger is held down
+            if(gamepad1.left_trigger > 0){
+                slowMode = .55;
+            }
+            else{
+                slowMode = 1;
+            }
+
+            if (ULTIMATE.ring3.blue() > ULTIMATE.ring3Threshold && intakeTimer.milliseconds() > 1000
+                    && catchplateTimer.milliseconds() > 1000 && shootTimer.milliseconds() > 1000) {
+                if(ringToggle){
+                    if(ring3Timer.milliseconds() > 120){
+                        bToggle = false;
+                        gPad2_AToggle = true;
+                        ULTIMATE.catchPlate.setPosition(ULTIMATE.CATCHPLATE_shootPosition);
+                    }
                 }
                 else{
-                    slowMode = 1;
-                    lsButtonWasPressed = false;
+                    ring3Timer.reset();
                 }
+                ringToggle = true;
+
+            }
+            else{
+                ringToggle = false;
+            }
+
+            if(gamepad1.dpad_right){
+                ULTIMATE.leftF.setPower(1);
+                ULTIMATE.leftB.setPower(-1);
+                ULTIMATE.rightF.setPower(-1);
+                ULTIMATE.rightB.setPower(1);
+            }
+            if(gamepad1.dpad_left){
+                ULTIMATE.leftF.setPower(-1);
+                ULTIMATE.leftB.setPower(1);
+                ULTIMATE.rightF.setPower(1);
+                ULTIMATE.rightB.setPower(-1);
+            }
+
+            if(gamepad1.right_trigger > 0 && mainTimer.seconds() < 100){
+                ULTIMATE.sideBar.setPosition(ULTIMATE.SIDEBAR_outPosition);
             }
 
 
-            //----------------- Accessory driver's controls --------------------------------------------
 
-            // move the shoot wheel motors
-            if (gamepad2.a) {
+
+
+
+            //----------------- Accessory driver's controls ----------------------------------------
+
+            // the velocity we set our flywheel motors to
+            targetVelocity = ULTIMATE.shootTPS - shootSubtractor + velocityIncrement;
+
+            // toggles on the flywheel motors
+            if (gamepad2.a && shootTimer.milliseconds() > timerConstant) {
                 gPad2_AToggle = !gPad2_AToggle;
-                sleep(sleepConstant);
+                shootTimer.reset();
             }
 
             if (gPad2_AToggle) {
-                ULTIMATE.shoot1.setVelocity(1500);
-                ULTIMATE.shoot2.setVelocity(1500);
+                ULTIMATE.shoot1.setVelocity(targetVelocity);
+                ULTIMATE.shoot2.setVelocity(targetVelocity);
             } else {
                 ULTIMATE.shoot1.setVelocity(0);
                 ULTIMATE.shoot2.setVelocity(0);
             }
 
-            // move the "catchplate"
-            if (gamepad2.b) {
+            // moves the catch plate
+            if (gamepad2.b && catchplateTimer.milliseconds() > timerConstant) {
                 if (!gPad2_BWasPressed) {
-                    ULTIMATE.catchPlate.setPosition(1);
+                    ULTIMATE.catchPlate.setPosition(ULTIMATE.CATCHPLATE_intakePosition);
                     gPad2_BWasPressed = true;
-                    sleep(sleepConstant);
                 } else {
-                    ULTIMATE.catchPlate.setPosition(.85);
+                    ULTIMATE.catchPlate.setPosition(ULTIMATE.CATCHPLATE_shootPosition);
                     gPad2_BWasPressed = false;
-                    sleep(sleepConstant);
                 }
+                catchplateTimer.reset();
             }
 
-            // dump
+            // dumps the rings in the catch plate if they load incorrectly
             if (gamepad2.left_bumper) {
-                ULTIMATE.catchPlate.setPosition(0);
+                ULTIMATE.catchPlate.setPosition(ULTIMATE.CATCHPLATE_dumpPosition);
             }
 
-            // move the wobble goal lifter
-            if (gamepad2.x) {
+            // moves the wobble goal lifter
+            if (gamepad2.x && armSwingTimer.milliseconds() > timerConstant) {
                 if (!gPad2_xWasPressed) {
-                    ULTIMATE.armSwing.setPosition(1);
+                    ULTIMATE.armSwing.setPosition(ULTIMATE.ARMSWING_downPosition);
                     gPad2_xWasPressed = true;
-                    sleep(sleepConstant);
                 } else {
-                    ULTIMATE.armSwing.setPosition(.35);
+                    ULTIMATE.armSwing.setPosition(ULTIMATE.ARMSWING_upPosition);
                     gPad2_xWasPressed = false;
-                    sleep(sleepConstant);
                 }
+                armSwingTimer.reset();
             }
 
-            //moves the swing servo all the way up so we can get the wobble goal above the wall
-            if (gamepad2.right_bumper) {
-                ULTIMATE.armSwing.setPosition(0);
-            }
-
-            // move wobble goal latch
-            if (gamepad2.y) {
+            // moves wobble goal latch
+            if (gamepad2.y && latchTimer.milliseconds() > timerConstant) {
                 if (!gPad2_yWasPressed) {
-                    ULTIMATE.latch.setPosition(1);
+                    ULTIMATE.latch.setPosition(ULTIMATE.LATCH_closedPosition);
                     gPad2_yWasPressed = true;
-                    sleep(sleepConstant);
                 } else {
-                    ULTIMATE.latch.setPosition(0);
+                    ULTIMATE.latch.setPosition(ULTIMATE.LATCH_openPosition);
                     gPad2_yWasPressed = false;
-                    sleep(sleepConstant);
                 }
-            }
-            if (gamepad2.dpad_right) {
-                ULTIMATE.rearLatch.setPosition(1);
-            }
-            if (gamepad2.dpad_left) {
-                ULTIMATE.rearLatch.setPosition(0);
+                latchTimer.reset();
             }
 
+            // increases or decreases the velocity of the flywheel by 50 ticks per second each press
+            if(gamepad2.dpad_up && incrementUpTimer.milliseconds() > timerConstant){
+                velocityIncrement += 50;
+                incrementUpTimer.reset();
+            }
+            if(gamepad2.dpad_down && incrementDownTimer.milliseconds() > timerConstant){
+                velocityIncrement -= 50;
+                incrementDownTimer.reset();
+            }
+            // for increased driver efficiency, moves the catch plate AND turns the wheel on or off
+            if(gamepad2.right_stick_button && rsButtonTimer.milliseconds() > timerConstant){
+                if(!rsButtonWasPressed){
+                ULTIMATE.catchPlate.setPosition(ULTIMATE.CATCHPLATE_shootPosition);
+                gPad2_BWasPressed = false;
+                gPad2_AToggle = true;
+                rsButtonWasPressed = true;
+                }
+                else{
+                    ULTIMATE.catchPlate.setPosition(ULTIMATE.CATCHPLATE_intakePosition);
+                    gPad2_BWasPressed = true;
+                    gPad2_AToggle = false;
+                    rsButtonWasPressed = false;
+                }
+                rsButtonTimer.reset();
+            }
 
+            if(gamepad2.right_bumper && sideBarTimer.milliseconds() > timerConstant){
+                if(!rightBumperWasPressed){
+                    ULTIMATE.sideBar.setPosition(ULTIMATE.SIDEBAR_inPosition);
+                    rightBumperWasPressed = true;
+                }
+                else{
+                    ULTIMATE.sideBar.setPosition(ULTIMATE.SIDEBAR_outPosition);
+                    rightBumperWasPressed = false;
+                }
+                sideBarTimer.reset();
+            }
 
-            // move the wobble goal arm
-            ULTIMATE.extensionArm.setPower(gamepad2.left_stick_x);
+            /* Moves the wobble goal arm. We believe that the Vex CR servos we are using for this
+            cannot have higher than .5 power which explains the multiplier */
+            ULTIMATE.extensionArm1.setPower(gamepad2.left_stick_x*.5);
+            ULTIMATE.extensionArm2.setPower(gamepad2.left_stick_x*.5);
+            ULTIMATE.tapeMeasure.setPower(gamepad2.right_stick_x);
         }
     }
     }
-
-
-
-
-

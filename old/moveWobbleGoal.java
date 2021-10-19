@@ -1,4 +1,4 @@
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+/*import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -19,7 +19,7 @@ public class moveWobbleGoal extends LinearOpMode {
         public void runOpMode() throws InterruptedException {
 
 
-            ULTIMATE.init(hardwareMap, false,true);
+            ULTIMATE.init(hardwareMap, false,true,false);
             ULTIMATE.Webcam1.setPipeline(vision);
 
 
@@ -220,4 +220,4 @@ public class moveWobbleGoal extends LinearOpMode {
         stop();
     }
 }
-
+*/

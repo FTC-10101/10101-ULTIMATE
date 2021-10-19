@@ -1,8 +1,11 @@
+/*package old;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
-//@Disabled
+@Disabled
 public class Tele_2 extends OpMode {
 
     // Inherits hardware class
@@ -35,7 +38,7 @@ public class Tele_2 extends OpMode {
 
     public void init() {
         // Initializes hardware map for the control hub
-        ULTIMATE.init(hardwareMap,false,false);
+        ULTIMATE.init(hardwareMap,false,false,false);
 
         // Makes sure servos are in the right position
         ULTIMATE.armSwing.setPosition(.35);
@@ -94,9 +97,9 @@ public class Tele_2 extends OpMode {
         }
 
         if (bToggle) {
-            ULTIMATE.intake.setPower(reverse);
+            ULTIMATE.intake1.setPower(reverse);
         } else {
-            ULTIMATE.intake.setPower(0);
+            ULTIMATE.intake1.setPower(0);
         }
 
         // move the "trigger"
@@ -212,12 +215,6 @@ public class Tele_2 extends OpMode {
                 sleep(sleepConstant);
             }
         }
-        if(gamepad2.dpad_right){
-            ULTIMATE.rearLatch.setPosition(1);
-        }
-        if(gamepad2.dpad_left){
-            ULTIMATE.rearLatch.setPosition(0);
-        }
 
         // move the wobble goal arm
         ULTIMATE.extensionArm.setPower(gamepad2.left_stick_x);
@@ -226,3 +223,4 @@ public class Tele_2 extends OpMode {
 
 
 }
+*/
